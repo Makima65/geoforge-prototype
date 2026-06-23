@@ -13,6 +13,8 @@ import TerminalLoader from '../components/TerminalLoader';
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractionComplete, setExtractionComplete] = useState(false);
   const [step, setStep] = useState(0);
   const [currentProject, setCurrentProject] = useState(null);
   const [viewProject, setViewProject] = useState(null);
@@ -79,8 +81,9 @@ export default function MakerPortal() {
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!url) return;
-    setLoading(true);
+    setIsExtracting(true);
+    setExtractionComplete(false);
+    
     try {
       const result = await runVectorMatch({
         project_name: "Extracted Build Specs",
@@ -276,8 +279,8 @@ export default function MakerPortal() {
               <p className="text-[#3ecf8e] font-medium tracking-wide">Paste a tutorial link to generate a localized ₱ PHP parts list & budget tracker.</p>
             </div>
 
-            {loading ? (
-              <TerminalLoader />
+            {isExtracting ? (
+              <TerminalLoader isComplete={extractionComplete} onFinished={handleExtractionDone} />
             ) : (
               <div className="bg-[#151515] border border-neutral-800 rounded-2xl p-8 mb-14 shadow-lg">
                 <form onSubmit={handleSubmit}>

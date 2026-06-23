@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react';
 import './TerminalLoader.css';
 import { motion } from 'framer-motion';
 
-const TerminalLoader = () => {
+const TerminalLoader = ({ isComplete, onFinished }) => {
   const [progress, setProgress] = useState(0);
+  const [statusText, setStatusText] = useState('Processing AI matching...');
 
   useEffect(() => {
-    // Simulate a loading sequence that rapidly goes to 95%, then slowly waits
+    if (isComplete) {
+      setProgress(100);
+      setStatusText('Extraction Complete!');
+      const timer = setTimeout(() => {
+        onFinished();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev < 40) return prev + Math.floor(Math.random() * 15) + 5;
@@ -17,7 +26,7 @@ const TerminalLoader = () => {
     }, 400);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isComplete, onFinished]);
 
   return (
     <motion.div 
@@ -37,8 +46,8 @@ const TerminalLoader = () => {
         </div>
       </div>
       
-      <div className="p-6">
-        <div className="scanner-loader mb-6">
+      <div className="p-8">
+        <div className="scanner-loader mb-8">
           <div className="wrapper">
             <div className="circle" />
             <div className="line-1" />
@@ -49,7 +58,7 @@ const TerminalLoader = () => {
         </div>
         
         <div className="flex justify-between items-center mb-2 font-mono text-sm">
-          <span className="text-[#3ecf8e]">Processing AI matching...</span>
+          <span className="text-[#3ecf8e]">{statusText}</span>
           <span className="text-[#3ecf8e] font-bold">{Math.min(progress, 100)}%</span>
         </div>
         <div className="w-full bg-[#1A1A1A] h-2 rounded-full overflow-hidden">
