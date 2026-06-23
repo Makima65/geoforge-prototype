@@ -10,6 +10,7 @@ import StoreMap from '../components/map/StoreMap';
 import AnimatedCheckbox from '../components/AnimatedCheckbox';
 import TerminalLoader from '../components/TerminalLoader';
 import GenerateButton from '../components/GenerateButton';
+import MarkCompleteCard from '../components/MarkCompleteCard';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
@@ -439,6 +440,19 @@ export default function MakerPortal() {
                   <FiPlus className="mr-2" /> Add Custom Item
                 </button>
               </div>
+
+              {isUpdatingMode && (
+                <div className="mt-12 flex justify-start">
+                  <MarkCompleteCard 
+                    isCompleted={currentProject.is_completed}
+                    onToggle={(val) => {
+                      const updated = { ...currentProject, is_completed: val };
+                      updated.audit_log = [...(updated.audit_log || []), { action: `Marked project as ${val ? 'Completed/Archived' : 'Active'}`, timestamp: new Date().toLocaleString() }];
+                      setCurrentProject(updated);
+                    }}
+                  />
+                </div>
+              )}
             </div>
             
             <button onClick={() => setStep(0)} className="mt-8 text-neutral-500 hover:text-white transition-colors flex items-center text-sm font-semibold">
