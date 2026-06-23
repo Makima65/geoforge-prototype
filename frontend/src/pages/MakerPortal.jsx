@@ -438,6 +438,7 @@ export default function MakerPortal() {
                 </div>
                 <button onClick={addCustomItem} className="border border-[#24b47e] text-[#3ecf8e] hover:bg-[#24b47e]/10 font-bold rounded-lg px-5 py-3 transition-all flex items-center text-sm uppercase tracking-wider shrink-0">
                   <FiPlus className="mr-2" /> Add Custom Item
+                </button>
               </div>
             </div>
             
