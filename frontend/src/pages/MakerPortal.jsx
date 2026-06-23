@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus } from 'react-icons/fi';
+import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus, FiEdit3 } from 'react-icons/fi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { runVectorMatch } from '../services/api';
 import { supabase } from '../services/supabase';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import StoreMap from '../components/map/StoreMap';
+import AnimatedCheckbox from '../components/AnimatedCheckbox';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
@@ -200,6 +199,20 @@ export default function MakerPortal() {
     setCustomSpec('');
   };
 
+  const toggleBought = (idx, checked) => {
+    const updated = { ...currentProject };
+    const compName = updated.components[idx].local;
+    updated.components[idx].isBought = checked;
+    updated.audit_log = [...(updated.audit_log || []), { action: `Marked ${compName} as ${checked ? 'Purchased' : 'Not Purchased'}`, timestamp: new Date().toLocaleString() }];
+    setCurrentProject(updated);
+  };
+
+  const updateTitle = (e) => {
+    const updated = { ...currentProject };
+    updated.title = e.target.value;
+    setCurrentProject(updated);
+  };
+
   const selectPartOption = (itemIdx, optionIdx) => {
     const updated = { ...currentProject };
     updated.components[itemIdx].selectedOptionIndex = optionIdx;
@@ -345,9 +358,18 @@ export default function MakerPortal() {
         {step === 1 && currentProject && (
           <motion.div key="step1" variants={slideVariants} initial="initial" animate="enter" exit="exit" className="w-full">
             <div className="flex items-start justify-between mb-8">
-              <div>
-                <h1 className="text-[32px] font-extrabold text-white tracking-tight">Shopping Checklist</h1>
-                <p className="text-neutral-500 text-sm mt-1">Double-check the items and quantities I found before we search suppliers.</p>
+              <div className="flex-1 mr-8">
+                <div className="flex items-center group mb-1 border-b border-transparent hover:border-neutral-700 focus-within:border-[#3ecf8e] pb-1 transition-colors w-fit">
+                  <FiEdit3 className="text-neutral-500 mr-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <input 
+                    type="text" 
+                    value={currentProject.title} 
+                    onChange={updateTitle}
+                    className="text-[32px] font-extrabold text-white tracking-tight bg-transparent outline-none w-full min-w-[300px]"
+                    placeholder="Name your build..."
+                  />
+                </div>
+                <p className="text-neutral-500 text-sm mt-1">Check off items as you buy them, and track your quantities.</p>
               </div>
               <button onClick={() => setStep(2)} className="bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold rounded-lg px-6 py-2.5 active:scale-[0.98] transition-all flex items-center shadow-[0_0_15px_rgba(36,180,126,0.2)]">
                 SEARCH SUPPLIERS <FiChevronRight className="ml-2" />
@@ -365,9 +387,16 @@ export default function MakerPortal() {
               
               <div className="space-y-2">
                 {currentProject.components?.map((item, idx) => (
-                  <div key={idx} className="grid grid-cols-12 items-center py-4 px-2 hover:bg-white/[0.02] transition-colors border-b border-neutral-800/50">
-                    <div className="col-span-4 text-neutral-200 font-medium pr-4">{item.local}</div>
-                    <div className="col-span-3 text-neutral-400 text-sm">{item.notes || 'Standard Spec'}</div>
+                  <div key={idx} className={`grid grid-cols-12 items-center py-4 px-2 hover:bg-white/[0.02] transition-colors border-b border-neutral-800/50 ${item.isBought ? 'opacity-50' : ''}`}>
+                    <div className="col-span-4 pr-4">
+                      <AnimatedCheckbox 
+                        id={`chk-${idx}`} 
+                        label={item.local} 
+                        checked={!!item.isBought} 
+                        onChange={(checked) => toggleBought(idx, checked)} 
+                      />
+                    </div>
+                    <div className={`col-span-3 text-sm ${item.isBought ? 'text-neutral-600 line-through' : 'text-neutral-400'}`}>{item.notes || 'Standard Spec'}</div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
                       <div className="flex items-center space-x-2 bg-[#0F0F0F] border border-neutral-800 rounded-lg px-2 py-1">
                         <button onClick={() => updateQty(idx, -1)} className="text-neutral-500 hover:text-white px-2">-</button>
