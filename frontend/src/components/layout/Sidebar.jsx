@@ -21,17 +21,6 @@ export default function Sidebar({ isOpen, toggle }) {
           </div>
         </div>
 
-        {/* Location Card */}
-        <div className={`bg-[#1A1A1A] border border-neutral-800 rounded-xl overflow-hidden shadow-sm transition-all duration-500 ${isOpen ? 'p-4 mb-8 opacity-100 max-h-40' : 'p-0 mb-8 opacity-0 max-h-0 border-transparent'}`}>
-          <div className="flex items-center text-neutral-300 text-sm font-semibold mb-1">
-            <FiMapPin className="text-[#3ecf8e] mr-2" />
-            Quezon City, PH
-          </div>
-          <div className="text-neutral-500 text-xs font-medium ml-6">
-            Currency: <span className="text-neutral-400">₱ PHP</span>
-          </div>
-        </div>
-
         {/* Navigation */}
         <nav className="space-y-1.5">
           {navItems.map((item) => (
