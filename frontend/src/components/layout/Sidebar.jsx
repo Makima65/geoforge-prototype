@@ -5,9 +5,7 @@ import { FiHome, FiPlus, FiSave, FiClock, FiSettings, FiMapPin } from 'react-ico
 export default function Sidebar() {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: FiHome },
-    { name: 'New Project', path: '/new', icon: FiPlus },
     { name: 'Saved Builds', path: '/saved', icon: FiSave },
-    { name: 'Parts History', path: '/history', icon: FiClock },
     { name: 'Settings', path: '/settings', icon: FiSettings },
   ];
 
