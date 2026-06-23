@@ -41,45 +41,70 @@ export default function DashboardMetrics() {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        
+        {/* Card 1: Active Projects (Blue Theme) */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}
-          className="bg-[#111111] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden"
+          className="group relative rounded-xl transition-all duration-500 z-0 bg-[#0A0A0A] border border-neutral-800 hover:border-transparent"
         >
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#3ecf8e]/10 rounded-full blur-2xl"></div>
-          <div className="flex items-center text-neutral-400 mb-4 font-semibold text-sm">
-            <FiActivity className="text-[#3ecf8e] mr-2 w-5 h-5" />
-            Total Active Projects
-          </div>
-          <div className="text-4xl font-black text-white">
-            {loading ? "..." : stats.totalProjects}
+          <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[2px] -z-10"></div>
+          <div className="absolute inset-0 bg-[#0D0D12] rounded-xl -z-10"></div>
+          
+          <div className="p-6 relative z-10">
+            <div className="flex justify-between items-start mb-3">
+              <h3 className="text-blue-500 text-[11px] font-black uppercase tracking-wider">ACTIVE PROJECTS</h3>
+              <FiActivity className="text-blue-500 w-4 h-4 opacity-80" />
+            </div>
+            <div className="text-[32px] font-extrabold text-white mb-2 leading-none">
+              {loading ? "..." : stats.totalProjects}
+            </div>
+            <div className="text-blue-500/70 text-[10px] font-bold">
+              Tracked Builds
+            </div>
           </div>
         </motion.div>
 
+        {/* Card 2: Total Budget (Green Theme) */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="bg-[#111111] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden"
+          className="group relative rounded-xl transition-all duration-500 z-0 bg-[#0A0A0A] border border-neutral-800 hover:border-transparent"
         >
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl"></div>
-          <div className="flex items-center text-neutral-400 mb-4 font-semibold text-sm">
-            <FiDollarSign className="text-blue-400 mr-2 w-5 h-5" />
-            Total PHP Budget
-          </div>
-          <div className="text-4xl font-black text-white">
-            ₱{loading ? "..." : stats.totalBudget.toLocaleString(undefined, {maximumFractionDigits: 0})}
+          <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-[#3ecf8e] to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[2px] -z-10"></div>
+          <div className="absolute inset-0 bg-[#0D120F] rounded-xl -z-10"></div>
+          
+          <div className="p-6 relative z-10">
+            <div className="flex justify-between items-start mb-3">
+              <h3 className="text-[#3ecf8e] text-[11px] font-black uppercase tracking-wider">TOTAL PHP BUDGET</h3>
+              <FiTrendingUp className="text-[#3ecf8e] w-4 h-4 opacity-80" />
+            </div>
+            <div className="text-[32px] font-extrabold text-white mb-2 leading-none tracking-tight">
+              ₱{loading ? "..." : stats.totalBudget.toLocaleString(undefined, {maximumFractionDigits: 0})}
+            </div>
+            <div className="text-[#3ecf8e]/70 text-[10px] font-bold">
+              Total Spend (All Time)
+            </div>
           </div>
         </motion.div>
 
+        {/* Card 3: AI Optimized (Red Theme) */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="bg-[#111111] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden"
+          className="group relative rounded-xl transition-all duration-500 z-0 bg-[#0A0A0A] border border-neutral-800 hover:border-transparent"
         >
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#3ecf8e]/20 rounded-full blur-2xl"></div>
-          <div className="flex items-center text-neutral-400 mb-4 font-semibold text-sm">
-            <FiCpu className="text-[#3ecf8e] mr-2 w-5 h-5" />
-            AI Optimized Builds
-          </div>
-          <div className="text-4xl font-black text-white">
-            {loading ? "..." : stats.aiOptimized}
+          <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-red-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[2px] -z-10"></div>
+          <div className="absolute inset-0 bg-[#120D0D] rounded-xl -z-10"></div>
+          
+          <div className="p-6 relative z-10">
+            <div className="flex justify-between items-start mb-3">
+              <h3 className="text-red-500 text-[11px] font-black uppercase tracking-wider">AI OPTIMIZED BUILDS</h3>
+              <FiCpu className="text-red-500 w-4 h-4 opacity-80" />
+            </div>
+            <div className="text-[32px] font-extrabold text-white mb-2 leading-none">
+              {loading ? "..." : stats.aiOptimized}
+            </div>
+            <div className="text-red-500/70 text-[10px] font-bold">
+              Smart Configurations
+            </div>
           </div>
         </motion.div>
       </div>
