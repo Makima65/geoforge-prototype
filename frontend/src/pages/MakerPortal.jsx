@@ -82,6 +82,11 @@ export default function MakerPortal() {
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    
+    // Give time for the button's click animation to play
+    await new Promise(resolve => setTimeout(resolve, 600));
+    
     setIsExtracting(true);
     setExtractionComplete(false);
     
@@ -129,12 +134,14 @@ export default function MakerPortal() {
     } catch (err) {
       console.error(err);
       setIsExtracting(false);
+      setLoading(false);
     }
   };
 
   const handleExtractionDone = () => {
     setIsExtracting(false);
     setExtractionComplete(false);
+    setLoading(false);
     setStep(1);
   };
 
