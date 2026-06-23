@@ -6,6 +6,7 @@ import { runVectorMatch } from '../services/api';
 import { supabase } from '../services/supabase';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import StoreMap from '../components/map/StoreMap';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
@@ -513,16 +514,12 @@ export default function MakerPortal() {
               {/* Right Column: Order Summary */}
               <div className="w-full lg:w-[420px] flex flex-col space-y-6">
                 
-                {/* Geolocation Mock Moved Here */}
-                <div className="bg-[#111111] border border-neutral-800 rounded-2xl p-6 flex flex-col items-center text-center">
-                  <div className="w-12 h-12 rounded-full bg-[#1A1A1A] border border-neutral-700 flex items-center justify-center mb-3 shadow-md">
-                    <FiMapPin className="text-[#3ecf8e] w-5 h-5" />
-                  </div>
-                  <h4 className="text-white font-bold text-[15px] mb-2">Local Pickup Available</h4>
-                  <p className="text-neutral-400 text-xs mb-4">Stock available at <span className="text-[#3ecf8e] font-semibold">Datablitz</span> and <span className="text-[#3ecf8e] font-semibold">Makerlab Electronics</span> branches near you.</p>
-                  <button className="w-full bg-transparent border border-neutral-700 hover:border-[#3ecf8e] hover:text-[#3ecf8e] text-white font-semibold rounded-lg py-2 transition-colors text-xs">
-                    View Stores on Map
-                  </button>
+                {/* Real Geolocation Map */}
+                <div className="bg-[#111111] border border-neutral-800 rounded-2xl p-4 shadow-xl">
+                   <h3 className="text-white font-bold text-[15px] mb-3 flex items-center"><FiMapPin className="text-[#3ecf8e] mr-2" /> Supply Chain Map</h3>
+                   <div className="w-full h-[300px] rounded-xl overflow-hidden border border-neutral-800">
+                     <StoreMap />
+                   </div>
                 </div>
 
                 <div className="bg-[#111111] border border-neutral-800 rounded-2xl p-8 shadow-xl">
