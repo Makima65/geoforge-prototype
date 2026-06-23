@@ -576,7 +576,7 @@ export default function MakerPortal() {
 
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Left Column: Cart Items */}
-              <div className="flex-1 bg-[#111111] border border-neutral-800 rounded-2xl overflow-hidden">
+              <div className="flex-1 bg-[#111111] border border-neutral-800 rounded-2xl overflow-hidden flex flex-col">
                 <div className="p-6 border-b border-neutral-800 bg-[#0F0F0F]">
                   <h3 className="text-white font-bold text-[17px]">Shopping Cart Items</h3>
                 </div>
@@ -600,7 +600,7 @@ export default function MakerPortal() {
                 </div>
                 
                 {isUpdatingMode && (
-                  <div className="p-6 border-t border-neutral-800 bg-[#0F0F0F] flex justify-start">
+                  <div className="mt-auto p-6 border-t border-neutral-800 bg-[#0F0F0F] flex justify-start">
                     <MarkCompleteCard 
                       isCompleted={currentProject.is_completed}
                       onToggle={(val) => {
