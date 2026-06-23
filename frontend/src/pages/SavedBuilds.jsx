@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiTrash2, FiEye, FiShoppingCart, FiClock, FiX, FiPlus, FiMinus, FiFileText, FiAlertTriangle } from 'react-icons/fi';
+import { FiTrash2, FiEye, FiShoppingCart, FiClock, FiAlertTriangle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 
@@ -8,7 +8,6 @@ export default function SavedBuilds() {
   const [carts, setCarts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartToDelete, setCartToDelete] = useState(null);
-  const [viewCart, setViewCart] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,41 +29,6 @@ export default function SavedBuilds() {
     await supabase.from('saved_carts').delete().eq('id', cartToDelete.id);
     setCarts(carts.filter(c => c.id !== cartToDelete.id));
     setCartToDelete(null);
-  };
-
-  const updateQuantity = async (componentIndex, change) => {
-    const updatedCart = { ...viewCart };
-    const component = updatedCart.components[componentIndex];
-    
-    const oldQty = component.qty || 1;
-    let newQty = oldQty + change;
-    if (newQty < 1) newQty = 1;
-    if (oldQty === newQty) return;
-    
-    component.qty = newQty;
-    
-    const action = `Changed ${component.orig} quantity from ${oldQty} to ${newQty}`;
-    const newLogEntry = { action, timestamp: new Date().toLocaleString() };
-    updatedCart.audit_log = [...(updatedCart.audit_log || []), newLogEntry];
-
-    let newTotal = 0;
-    updatedCart.components.forEach(comp => {
-      const price = comp.options ? comp.options[comp.selectedOptionIndex || 0].price : (comp.price || 0);
-      newTotal += price * (comp.qty || 1);
-    });
-    
-    if (updatedCart.is_optimized) newTotal *= 0.75;
-    updatedCart.final_cost = newTotal;
-
-    setViewCart(updatedCart);
-
-    await supabase.from('saved_carts').update({
-      components: updatedCart.components,
-      audit_log: updatedCart.audit_log,
-      final_cost: updatedCart.final_cost
-    }).eq('id', updatedCart.id);
-    
-    setCarts(carts.map(c => c.id === updatedCart.id ? updatedCart : c));
   };
 
   return (
@@ -126,7 +90,7 @@ export default function SavedBuilds() {
                 </div>
 
                 <div className="space-y-3">
-                  <button onClick={() => setViewCart(cart)} className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white border border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
+                  <button onClick={() => navigate('/new', { state: { editProject: cart } })} className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white border border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
                     <FiEye className="mr-2" /> View Full Tracker
                   </button>
                   <button onClick={() => setCartToDelete(cart)} className="w-full bg-transparent hover:bg-red-500/10 text-neutral-500 hover:text-red-400 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center border border-transparent hover:border-red-500/20">
@@ -157,72 +121,6 @@ export default function SavedBuilds() {
                 <button onClick={confirmDelete} className="bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg py-2.5 transition-colors">Yes, Delete</button>
               </div>
             </div>
-          </motion.div>
-        )}
-
-        {/* View Modal with Quantity Editor & Audit Log */}
-        {viewCart && (
-          <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
-          >
-            <motion.div 
-              initial={{ y: 50, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 50, scale: 0.95 }}
-              className="bg-[#111111] border border-neutral-800 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
-            >
-              <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-[#0A0A0A]">
-                <div>
-                  <h3 className="text-white font-bold text-xl">{viewCart.title}</h3>
-                  <p className="text-[#3ecf8e] text-sm mt-1 font-semibold">Live Budget: ₱{viewCart.final_cost?.toLocaleString(undefined, {maximumFractionDigits: 0})}</p>
-                </div>
-                <button onClick={() => setViewCart(null)} className="text-neutral-500 hover:text-white transition-colors bg-neutral-900 hover:bg-neutral-800 p-2 rounded-lg">
-                  <FiX className="w-5 h-5" />
-                </button>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                {/* Parts List */}
-                <div>
-                  <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wider text-neutral-500 flex items-center"><FiShoppingCart className="mr-2" /> Procurement Parts</h4>
-                  <div className="space-y-3">
-                    {viewCart.components?.map((comp, idx) => (
-                      <div key={idx} className="bg-[#1A1A1A] border border-neutral-800 rounded-xl p-4 flex items-center justify-between">
-                        <div>
-                          <div className="text-white font-bold text-[15px] mb-1">{comp.local}</div>
-                          <div className="text-neutral-500 text-xs">Original: {comp.orig}</div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-3 bg-black border border-neutral-800 rounded-lg p-1">
-                            <button onClick={() => updateQuantity(idx, -1)} className="text-neutral-500 hover:text-white p-1"><FiMinus /></button>
-                            <span className="text-white font-bold text-sm w-6 text-center">{comp.qty || 1}</span>
-                            <button onClick={() => updateQuantity(idx, 1)} className="text-[#3ecf8e] hover:text-white p-1"><FiPlus /></button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Audit Log */}
-                <div>
-                  <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wider text-neutral-500 flex items-center"><FiFileText className="mr-2" /> Modification Audit Log</h4>
-                  <div className="bg-[#050505] border border-neutral-800/50 rounded-xl p-4 max-h-48 overflow-y-auto">
-                    {viewCart.audit_log?.length > 0 ? (
-                      <ul className="space-y-3">
-                        {viewCart.audit_log.map((log, i) => (
-                          <li key={i} className="flex items-start text-xs">
-                            <span className="text-neutral-600 mr-3 shrink-0">[{log.timestamp}]</span>
-                            <span className="text-[#3ecf8e] font-medium">{log.action}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div className="text-neutral-600 text-sm text-center py-4">No modifications logged yet.</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

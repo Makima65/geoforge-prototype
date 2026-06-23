@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus } from 'react-icons/fi';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { runVectorMatch } from '../services/api';
 import { supabase } from '../services/supabase';
 import { jsPDF } from 'jspdf';
@@ -14,11 +14,31 @@ export default function MakerPortal() {
   const [step, setStep] = useState(0);
   const [currentProject, setCurrentProject] = useState(null);
   const [useSmartRecommendations, setUseSmartRecommendations] = useState(true);
+  const [isUpdatingMode, setIsUpdatingMode] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Custom item states
   const [customName, setCustomName] = useState('');
   const [customSpec, setCustomSpec] = useState('');
+
+  useEffect(() => {
+    // If navigated from SavedBuilds with editProject in state
+    if (location.state && location.state.editProject) {
+      const editData = location.state.editProject;
+      setCurrentProject({
+        ...editData,
+        components: editData.components,
+        cost: '₱' + (editData.final_cost || 0).toLocaleString()
+      });
+      setUseSmartRecommendations(editData.is_optimized);
+      setIsUpdatingMode(true);
+      setStep(1); // Jump straight to shopping checklist
+      
+      // Clear state so refresh doesn't trigger it again
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   // Helper to calculate dynamic total based on selections and quantities
   const calculateTotalCost = (project) => {
@@ -135,15 +155,22 @@ export default function MakerPortal() {
 
   const deleteItem = (idx) => {
     const updated = { ...currentProject };
+    const compName = updated.components[idx].local;
     updated.components.splice(idx, 1);
+    
+    updated.audit_log = [...(updated.audit_log || []), { action: `Removed ${compName} from list`, timestamp: new Date().toLocaleString() }];
+    
     setCurrentProject(updated);
   };
 
   const updateQty = (idx, delta) => {
     const updated = { ...currentProject };
-    const newQty = (updated.components[idx].qty || 1) + delta;
-    if (newQty > 0) {
+    const oldQty = updated.components[idx].qty || 1;
+    const newQty = oldQty + delta;
+    if (newQty > 0 && oldQty !== newQty) {
       updated.components[idx].qty = newQty;
+      const compName = updated.components[idx].local;
+      updated.audit_log = [...(updated.audit_log || []), { action: `Changed ${compName} quantity from ${oldQty} to ${newQty}`, timestamp: new Date().toLocaleString() }];
       setCurrentProject(updated);
     }
   };
@@ -158,12 +185,15 @@ export default function MakerPortal() {
       qty: 1,
       selectedOptionIndex: 1,
       options: [
-        { type: 'Premium Selection', seller: 'DigiSupply Warehouse', stock: 120, price: 300, match: '98%' },
-        { type: 'Standard Edition', seller: 'MakerStore', stock: 45, price: 200, match: '95%' },
-        { type: 'Direct Factory Outlet', seller: 'NextDay Chip Co', stock: 5, price: 140, match: '88%' }
+        { type: 'Premium Selection', seller: 'DigiSupply', stock: 50, price: 500, match: '90%' },
+        { type: 'Standard Edition', seller: 'MakerStore', stock: 100, price: 300, match: '95%' },
+        { type: 'Direct Factory Outlet', seller: 'Direct', stock: 10, price: 200, match: '80%' }
       ],
       isCustom: true
     });
+    
+    updated.audit_log = [...(updated.audit_log || []), { action: `Added custom item: ${customName}`, timestamp: new Date().toLocaleString() }];
+    
     setCurrentProject(updated);
     setCustomName('');
     setCustomSpec('');
@@ -176,32 +206,45 @@ export default function MakerPortal() {
   };
 
   const saveCartToDatabase = async () => {
-    const finalCost = useSmartRecommendations 
-      ? calculateTotalCost(currentProject) * 0.75 
-      : calculateTotalCost(currentProject);
-      
+    if (!currentProject) return;
+
     const cartToSave = {
-      title: currentProject.project_name || "Custom Hardware Build",
-      final_cost: finalCost,
+      title: currentProject.title,
+      final_cost: useSmartRecommendations ? calculateTotalCost(currentProject) * 0.75 : calculateTotalCost(currentProject),
       is_optimized: useSmartRecommendations,
       components: currentProject.components,
-      audit_log: [{
-        action: "Project finalized and saved to Tracker",
-        timestamp: new Date().toLocaleString()
-      }]
+      audit_log: currentProject.audit_log || [
+        { action: "Project finalized and saved to Tracker", timestamp: new Date().toLocaleString() }
+      ]
     };
 
-    const { error } = await supabase
-      .from('saved_carts')
-      .insert([cartToSave]);
+    if (isUpdatingMode && currentProject.id) {
+      cartToSave.audit_log.push({ action: "Project Updated via Maker Portal", timestamp: new Date().toLocaleString() });
       
-    if (error) {
-      console.error("Supabase error:", error);
-      alert("Failed to save to cloud database. Did you run the SQL code in the Supabase editor?");
-      return;
+      const { error } = await supabase
+        .from('saved_carts')
+        .update(cartToSave)
+        .eq('id', currentProject.id);
+
+      if (error) {
+        console.error("Supabase error:", error);
+        alert("Failed to update cloud database.");
+      } else {
+        alert("Procurement Plan Successfully Updated!");
+        navigate('/saved');
+      }
+    } else {
+      const { error } = await supabase
+        .from('saved_carts')
+        .insert([cartToSave]);
+
+      if (error) {
+        console.error("Supabase error:", error);
+        alert("Failed to save to cloud database.");
+      } else {
+        navigate('/saved');
+      }
     }
-    
-    navigate('/saved');
   };
 
   return (
@@ -481,8 +524,12 @@ export default function MakerPortal() {
         {step === 4 && currentProject && (
           <motion.div key="step4" variants={slideVariants} initial="initial" animate="enter" exit="exit" className="w-full" id="maker-results-dashboard">
             <div className="mb-8">
-              <h1 className="text-[32px] font-extrabold text-white tracking-tight">Send Parts to Tracker</h1>
-              <p className="text-neutral-500 text-sm mt-1">Confirm details and load everything into your unified procurement tracker.</p>
+              <h1 className="text-[32px] font-extrabold text-white tracking-tight">
+                {isUpdatingMode ? "Update Saved Build" : "Send Parts to Tracker"}
+              </h1>
+              <p className="text-neutral-500 text-sm mt-1">
+                {isUpdatingMode ? "Confirm details to overwrite your existing procurement tracker." : "Confirm details and load everything into your unified procurement tracker."}
+              </p>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8">
@@ -536,8 +583,8 @@ export default function MakerPortal() {
                   </div>
 
                   <div className="space-y-4">
-                    <button onClick={saveCartToDatabase} className="w-full bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_0_20px_rgba(36,180,126,0.2)] text-[13px] tracking-wide">
-                      <FiSave className="mr-2 w-5 h-5" /> SAVE PROCUREMENT PLAN
+                    <button onClick={saveCartToDatabase} className="w-full bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center shadow-[0_0_20px_rgba(36,180,126,0.2)] text-[13px] tracking-wide uppercase">
+                      <FiSave className="mr-2 w-5 h-5" /> {isUpdatingMode ? "UPDATE PROCUREMENT PLAN" : "SAVE PROCUREMENT PLAN"}
                     </button>
                     
                     <button id="maker-download-btn" onClick={handleDownloadPDF} className="w-full bg-transparent border border-[#24b47e]/50 hover:border-[#3ecf8e] text-[#3ecf8e] font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center text-[13px] tracking-wide">
