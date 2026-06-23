@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -29,12 +29,30 @@ export default function MakerPortal() {
     }, 0);
   };
   
-  const [projects, setProjects] = useState([
-    { title: 'DIY Solar Charger', date: 'Jun 18, 2025', parts: 8, cost: '₱12,450', localScore: 91 },
-    { title: 'Drip Irrigation System', date: 'Jun 12, 2025', parts: 12, cost: '₱8,900', localScore: 78 },
-    { title: 'Bagyo-Ready Weather Station', date: 'May 30, 2025', parts: 6, cost: '₱4,200', localScore: 100 },
-  ]);
+  const [projects, setProjects] = useState([]);
 
+  useEffect(() => {
+    async function fetchRecent() {
+      const { data } = await supabase
+        .from('saved_carts')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(3);
+      
+      if (data && data.length > 0) {
+        const formatted = data.map(cart => ({
+          title: cart.title,
+          date: new Date(cart.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          parts: cart.components ? cart.components.length : 0,
+          cost: '₱' + (cart.final_cost || 0).toLocaleString(undefined, {maximumFractionDigits: 0}),
+          localScore: cart.is_optimized ? 100 : 85,
+          components: cart.components,
+        }));
+        setProjects(formatted);
+      }
+    }
+    fetchRecent();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
