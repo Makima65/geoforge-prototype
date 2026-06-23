@@ -438,21 +438,7 @@ export default function MakerPortal() {
                 </div>
                 <button onClick={addCustomItem} className="border border-[#24b47e] text-[#3ecf8e] hover:bg-[#24b47e]/10 font-bold rounded-lg px-5 py-3 transition-all flex items-center text-sm uppercase tracking-wider shrink-0">
                   <FiPlus className="mr-2" /> Add Custom Item
-                </button>
               </div>
-
-              {isUpdatingMode && (
-                <div className="mt-12 flex justify-start">
-                  <MarkCompleteCard 
-                    isCompleted={currentProject.is_completed}
-                    onToggle={(val) => {
-                      const updated = { ...currentProject, is_completed: val };
-                      updated.audit_log = [...(updated.audit_log || []), { action: `Marked project as ${val ? 'Completed/Archived' : 'Active'}`, timestamp: new Date().toLocaleString() }];
-                      setCurrentProject(updated);
-                    }}
-                  />
-                </div>
-              )}
             </div>
             
             <button onClick={() => setStep(0)} className="mt-8 text-neutral-500 hover:text-white transition-colors flex items-center text-sm font-semibold">
@@ -592,7 +578,7 @@ export default function MakerPortal() {
                 <div className="p-6 border-b border-neutral-800 bg-[#0F0F0F]">
                   <h3 className="text-white font-bold text-[17px]">Shopping Cart Items</h3>
                 </div>
-                <div className="divide-y divide-neutral-800/80">
+                <div className="divide-y divide-neutral-800/80 overflow-y-auto max-h-[450px] custom-scrollbar">
                   {currentProject.components?.map((item, idx) => {
                     const selectedOpt = item.options ? item.options[item.selectedOptionIndex] : null;
                     const price = selectedOpt ? selectedOpt.price : (item.price || 0);
@@ -610,6 +596,19 @@ export default function MakerPortal() {
                     );
                   })}
                 </div>
+                
+                {isUpdatingMode && (
+                  <div className="p-6 border-t border-neutral-800 bg-[#0F0F0F] flex justify-start">
+                    <MarkCompleteCard 
+                      isCompleted={currentProject.is_completed}
+                      onToggle={(val) => {
+                        const updated = { ...currentProject, is_completed: val };
+                        updated.audit_log = [...(updated.audit_log || []), { action: `Marked project as ${val ? 'Completed/Archived' : 'Active'}`, timestamp: new Date().toLocaleString() }];
+                        setCurrentProject(updated);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Right Column: Order Summary */}
