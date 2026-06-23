@@ -131,6 +131,12 @@ export default function MakerPortal() {
     }
   };
 
+  const handleExtractionDone = () => {
+    setIsExtracting(false);
+    setExtractionComplete(false);
+    setStep(1);
+  };
+
   const handleDownloadPDF = async () => {
     const element = document.getElementById('maker-results-dashboard');
     if (!element) return;
