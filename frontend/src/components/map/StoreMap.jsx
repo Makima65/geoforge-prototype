@@ -31,7 +31,12 @@ const STORES = [
   { id: 2, name: 'Deeco Electronics', type: 'Components & Tools', lat: 14.6010, lng: 120.9830, stock: 'Medium' },
   { id: 3, name: 'DataBlitz SM North', type: 'Consumer Tech', lat: 14.6568, lng: 121.0289, stock: 'Low' },
   { id: 4, name: 'MakerLab Electronics', type: 'DIY Maker Kits', lat: 14.6300, lng: 121.0425, stock: 'High' },
-  { id: 5, name: 'E-Gizmo Mechatronix', type: 'Robotics Parts', lat: 14.5645, lng: 120.9934, stock: 'High' }
+  { id: 5, name: 'E-Gizmo Mechatronix', type: 'Robotics Parts', lat: 14.5645, lng: 120.9934, stock: 'High' },
+  { id: 6, name: 'Circuitrocks', type: 'Arduino & Sensors', lat: 14.6288, lng: 121.0336, stock: 'Medium' },
+  { id: 7, name: 'Circuit Help', type: '3D Printing & Electronics', lat: 14.6360, lng: 121.1000, stock: 'Low' },
+  { id: 8, name: 'PC Express Gilmore', type: 'Computer Hardware', lat: 14.6158, lng: 121.0333, stock: 'Medium' },
+  { id: 9, name: 'RS Components (Makati)', type: 'Industrial Electronics', lat: 14.5547, lng: 121.0244, stock: 'High' },
+  { id: 10, name: 'Octagon Megamall', type: 'Cables & Peripherals', lat: 14.5843, lng: 121.0571, stock: 'Low' }
 ];
 
 // Dark mode tile layer (CartoDB Dark Matter)
