@@ -14,19 +14,11 @@ export default function Sidebar({ isOpen, toggle }) {
     <div className={`h-screen bg-[#111111] border-r border-neutral-800 flex flex-col fixed left-0 top-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] z-50 ${isOpen ? 'w-64' : 'w-[84px]'}`}>
       {/* Brand */}
       <div className="p-6">
-        <div className={`flex items-center mb-8 ${isOpen ? 'justify-between' : 'flex-col gap-6 justify-center'}`}>
-          <div className={`flex items-center space-x-3 transition-all duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0 overflow-hidden hidden'}`}>
-            <div className="w-8 h-8 bg-[#3ecf8e] shrink-0 rounded-md flex items-center justify-center text-black font-extrabold text-sm shadow-[0_0_15px_rgba(36,180,126,0.2)]">
-              FR
-            </div>
-            <span className="text-[#3ecf8e] font-extrabold tracking-tight text-lg whitespace-nowrap">Field-Ready</span>
-          </div>
-          {!isOpen && (
-            <div className="w-8 h-8 bg-[#3ecf8e] shrink-0 rounded-md flex items-center justify-center text-black font-extrabold text-sm shadow-[0_0_15px_rgba(36,180,126,0.2)]">
-              FR
-            </div>
-          )}
+        <div className="flex items-center mb-8 h-10">
           <SidebarToggle isOpen={isOpen} toggle={toggle} />
+          <div className={`flex items-center transition-all duration-500 ${isOpen ? 'opacity-100 w-auto ml-4' : 'opacity-0 w-0 ml-0 overflow-hidden'}`}>
+            <span className="text-[#3ecf8e] font-extrabold tracking-tight text-xl whitespace-nowrap">GeoForge</span>
+          </div>
         </div>
 
         {/* Location Card */}
