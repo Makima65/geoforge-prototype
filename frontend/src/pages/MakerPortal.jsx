@@ -246,6 +246,7 @@ export default function MakerPortal() {
       title: currentProject.title,
       final_cost: useSmartRecommendations ? calculateTotalCost(currentProject) * 0.75 : calculateTotalCost(currentProject),
       is_optimized: useSmartRecommendations,
+      is_completed: currentProject.is_completed || false,
       components: currentProject.components,
       audit_log: currentProject.audit_log || [
         { action: "Project finalized and saved to Tracker", timestamp: new Date().toLocaleString() }
