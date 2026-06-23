@@ -1,5 +1,4 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { FiMapPin } from 'react-icons/fi';
@@ -44,39 +43,55 @@ const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 export default function StoreMap() {
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    
+    // Only initialize once
+    if (!mapInstance.current) {
+      mapInstance.current = L.map(mapRef.current, {
+        center: [14.6091, 121.0223],
+        zoom: 12,
+        zoomControl: false
+      });
+
+      L.tileLayer(TILE_URL, {
+        attribution: ATTRIBUTION
+      }).addTo(mapInstance.current);
+
+      STORES.forEach((store) => {
+        const icon = store.stock === 'High' ? iconGreen : iconBlue;
+        const marker = L.marker([store.lat, store.lng], { icon }).addTo(mapInstance.current);
+        
+        const badgeColor = store.stock === 'High' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700';
+        
+        marker.bindPopup(`
+          <div class="p-1">
+            <h3 class="font-bold text-gray-900 text-sm mb-1">${store.name}</h3>
+            <p class="text-xs text-gray-600 mb-2">${store.type}</p>
+            <div class="flex items-center text-xs font-semibold">
+              <span class="px-2 py-0.5 rounded-full ${badgeColor}">
+                ${store.stock} Stock Match
+              </span>
+            </div>
+          </div>
+        `, { className: 'custom-popup' });
+      });
+    }
+
+    return () => {
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full h-full min-h-[400px] rounded-2xl overflow-hidden border border-neutral-800 shadow-2xl relative z-0">
-      <MapContainer 
-        center={[14.6091, 121.0223]} 
-        zoom={12} 
-        style={{ height: '100%', width: '100%', minHeight: '400px', background: '#0A0A0A' }}
-        zoomControl={false}
-      >
-        <TileLayer
-          url={TILE_URL}
-          attribution={ATTRIBUTION}
-        />
-        {STORES.map((store) => (
-          <Marker 
-            key={store.id} 
-            position={[store.lat, store.lng]}
-            icon={store.stock === 'High' ? iconGreen : iconBlue}
-          >
-            <Popup className="custom-popup">
-              <div className="p-1">
-                <h3 className="font-bold text-gray-900 text-sm mb-1">{store.name}</h3>
-                <p className="text-xs text-gray-600 mb-2">{store.type}</p>
-                <div className="flex items-center text-xs font-semibold">
-                  <span className={`px-2 py-0.5 rounded-full ${store.stock === 'High' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                    {store.stock} Stock Match
-                  </span>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-      
+      <div ref={mapRef} style={{ height: '100%', width: '100%', minHeight: '400px', background: '#0A0A0A' }} />
       <style>{`
         .leaflet-popup-content-wrapper {
           border-radius: 12px;

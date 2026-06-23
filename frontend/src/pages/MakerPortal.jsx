@@ -391,12 +391,16 @@ export default function MakerPortal() {
                 {currentProject.components?.map((item, idx) => (
                   <div key={idx} className={`grid grid-cols-12 items-center py-4 px-2 hover:bg-white/[0.02] transition-colors border-b border-neutral-800/50 ${item.isBought ? 'opacity-50' : ''}`}>
                     <div className="col-span-4 pr-4">
-                      <AnimatedCheckbox 
-                        id={`chk-${idx}`} 
-                        label={item.local} 
-                        checked={!!item.isBought} 
-                        onChange={(checked) => toggleBought(idx, checked)} 
-                      />
+                      {isUpdatingMode ? (
+                        <AnimatedCheckbox 
+                          id={`chk-${idx}`} 
+                          label={item.local} 
+                          checked={!!item.isBought} 
+                          onChange={(checked) => toggleBought(idx, checked)} 
+                        />
+                      ) : (
+                        <span className="text-neutral-200 font-medium">{item.local}</span>
+                      )}
                     </div>
                     <div className={`col-span-3 text-sm ${item.isBought ? 'text-neutral-600 line-through' : 'text-neutral-400'}`}>{item.notes || 'Standard Spec'}</div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
