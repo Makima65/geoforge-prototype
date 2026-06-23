@@ -65,11 +65,18 @@ export default function SavedBuilds() {
                   <div className="w-12 h-12 rounded-lg bg-[#1A1A1A] border border-neutral-700 flex items-center justify-center shrink-0">
                     <FiShoppingCart className="text-[#3ecf8e] w-5 h-5" />
                   </div>
-                  {cart.is_optimized && (
-                    <span className="bg-[#24b47e]/10 text-[#3ecf8e] text-[10px] font-bold px-2 py-1 rounded border border-[#24b47e]/20 uppercase">
-                      AI Optimized
-                    </span>
-                  )}
+                  <div className="flex flex-col items-end space-y-1">
+                    {cart.is_optimized && (
+                      <span className="bg-[#24b47e]/10 text-[#3ecf8e] text-[10px] font-bold px-2 py-1 rounded border border-[#24b47e]/20 uppercase">
+                        AI Optimized
+                      </span>
+                    )}
+                    {cart.is_completed && (
+                      <span className="bg-neutral-800 text-white text-[10px] font-bold px-2 py-1 rounded border border-neutral-600 uppercase">
+                        Completed
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h3 className="text-white font-bold text-lg leading-snug mb-1 line-clamp-1" title={cart.title}>{cart.title}</h3>
                 <div className="flex items-center text-neutral-500 text-xs font-medium">
