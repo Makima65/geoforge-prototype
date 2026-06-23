@@ -13,6 +13,7 @@ export default function MakerPortal() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
   const [currentProject, setCurrentProject] = useState(null);
+  const [viewProject, setViewProject] = useState(null);
   const [useSmartRecommendations, setUseSmartRecommendations] = useState(true);
   const [isUpdatingMode, setIsUpdatingMode] = useState(false);
   const navigate = useNavigate();
@@ -300,8 +301,7 @@ export default function MakerPortal() {
                     key={idx}
                     onClick={() => {
                       if(project.components) {
-                        setCurrentProject(project);
-                        setStep(1);
+                        setViewProject(project);
                       }
                     }}
                     whileHover={{ scale: 1.005, backgroundColor: "rgba(26, 26, 26, 1)" }}
@@ -600,7 +600,60 @@ export default function MakerPortal() {
             </button>
           </motion.div>
         )}
+      </AnimatePresence>
 
+      <AnimatePresence>
+        {viewProject && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ y: 50, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 50, scale: 0.95 }}
+              className="bg-[#111111] border border-neutral-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+            >
+              <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-[#0A0A0A]">
+                <div>
+                  <h3 className="text-white font-bold text-xl">{viewProject.title}</h3>
+                  <p className="text-[#3ecf8e] text-sm mt-1 font-semibold">Total Budget: {viewProject.cost}</p>
+                </div>
+                <button onClick={() => setViewProject(null)} className="text-neutral-500 hover:text-white transition-colors bg-neutral-900 hover:bg-neutral-800 p-2 rounded-lg">
+                  <FiX className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wider text-neutral-500">Project Parts List</h4>
+                <div className="space-y-3">
+                  {viewProject.components?.map((comp, idx) => (
+                    <div key={idx} className="bg-[#1A1A1A] border border-neutral-800 rounded-xl p-4 flex items-center justify-between">
+                      <div>
+                        <div className="text-white font-bold text-[15px] mb-1">{comp.local}</div>
+                        <div className="text-neutral-500 text-xs">Original: {comp.orig}</div>
+                      </div>
+                      <div className="text-white font-bold text-sm bg-black border border-neutral-800 rounded-lg px-3 py-1">
+                        Qty: {comp.qty || 1}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="p-6 border-t border-neutral-800 bg-[#0A0A0A] flex justify-end">
+                <button 
+                  onClick={() => {
+                    setCurrentProject(viewProject);
+                    setViewProject(null);
+                    setStep(1);
+                  }} 
+                  className="bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold rounded-lg px-6 py-2.5 transition-colors text-sm flex items-center"
+                >
+                  <FiPlus className="mr-2" /> Modify & Update Project
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
