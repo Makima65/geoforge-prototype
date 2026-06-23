@@ -310,8 +310,8 @@ export default function MakerPortal() {
                   )}
                 </button>
               </form>
-            )}
             </div>
+            )}
 
             <div>
               <h3 className="text-[11px] font-bold text-[#24b47e] tracking-[0.2em] uppercase mb-5">Recent Projects</h3>
