@@ -8,6 +8,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import StoreMap from '../components/map/StoreMap';
 import AnimatedCheckbox from '../components/AnimatedCheckbox';
+import TerminalLoader from '../components/TerminalLoader';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
@@ -275,10 +276,13 @@ export default function MakerPortal() {
               <p className="text-[#3ecf8e] font-medium tracking-wide">Paste a tutorial link to generate a localized ₱ PHP parts list & budget tracker.</p>
             </div>
 
-            <div className="bg-[#151515] border border-neutral-800 rounded-2xl p-8 mb-14 shadow-lg">
-              <form onSubmit={handleSubmit}>
-                <label className="block text-white font-semibold mb-3 text-[15px]">YouTube or GitHub tutorial URL</label>
-                <div className="bg-[#0A0A0A] border border-neutral-800 rounded-xl p-1 mb-6 flex items-center transition-all focus-within:border-[#3ecf8e]/40 focus-within:ring-1 focus-within:ring-[#3ecf8e]/40">
+            {loading ? (
+              <TerminalLoader />
+            ) : (
+              <div className="bg-[#151515] border border-neutral-800 rounded-2xl p-8 mb-14 shadow-lg">
+                <form onSubmit={handleSubmit}>
+                  <label className="block text-white font-semibold mb-3 text-[15px]">YouTube or GitHub tutorial URL</label>
+                  <div className="bg-[#0A0A0A] border border-neutral-800 rounded-xl p-1 mb-6 flex items-center transition-all focus-within:border-[#3ecf8e]/40 focus-within:ring-1 focus-within:ring-[#3ecf8e]/40">
                   <input
                     type="url"
                     value={url}
@@ -306,6 +310,7 @@ export default function MakerPortal() {
                   )}
                 </button>
               </form>
+            )}
             </div>
 
             <div>
