@@ -124,11 +124,10 @@ export default function MakerPortal() {
       setProjects([newProject, ...projects]);
       setCurrentProject(newProject);
       setUrl('');
-      setStep(1);
+      setExtractionComplete(true);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
+      setIsExtracting(false);
     }
   };
 
