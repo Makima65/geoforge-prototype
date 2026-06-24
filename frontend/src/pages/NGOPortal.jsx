@@ -104,13 +104,19 @@ const GHANA_MOCK_DATA = {
 export default function NGOPortal() {
   const [step, setStep] = useState(0); // 0 = Input, 1 = Loading, 2 = Dashboard
   const [situationPrompt, setSituationPrompt] = useState("A village of 1,200 people in northern Ghana lacks reliable clean water access. Current sources are 2 hand-dug wells that dry up in dry season and a river 3 km away with contamination risk. We have 3 trained community health workers, support from local NGO (WASH-Ghana) with roughly $8,000 available, and 40 able-bodied community volunteers. Rainy season starts in 6 weeks. Main constraints: no heavy machinery on-site, limited material transport from the nearest town (Tamale, 120 km).");
+  const [extractionComplete, setExtractionComplete] = useState(false);
   
   // Checklist State
   const [checkedTasks, setCheckedTasks] = useState(new Set());
 
   const handleAnalyze = () => {
     setStep(1);
-    // Loading is handled by TerminalLoader calling handleExtractionComplete
+    setExtractionComplete(false);
+    
+    // Simulate AI extraction delay
+    setTimeout(() => {
+      setExtractionComplete(true);
+    }, 4000);
   };
 
   const handleExtractionComplete = () => {
@@ -195,7 +201,7 @@ export default function NGOPortal() {
         {/* STATE 1: Loading */}
         {step === 1 && (
           <motion.div key="loader" className="max-w-4xl mx-auto pt-10">
-            <TerminalLoader isComplete={false} onFinished={handleExtractionComplete} />
+            <TerminalLoader isComplete={extractionComplete} onFinished={handleExtractionComplete} />
           </motion.div>
         )}
 
