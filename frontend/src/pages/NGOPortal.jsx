@@ -103,6 +103,12 @@ const GHANA_MOCK_DATA = {
 
 export default function NGOPortal() {
   const [step, setStep] = useState(0); // 0 = Input, 1 = Loading, 2 = Dashboard
+  
+  // Location State
+  const [region, setRegion] = useState('');
+  const [city, setCity] = useState('');
+  const [barangay, setBarangay] = useState('');
+
   const [situationPrompt, setSituationPrompt] = useState("A village of 1,200 people in northern Ghana lacks reliable clean water access. Current sources are 2 hand-dug wells that dry up in dry season and a river 3 km away with contamination risk. We have 3 trained community health workers, support from local NGO (WASH-Ghana) with roughly $8,000 available, and 40 able-bodied community volunteers. Rainy season starts in 6 weeks. Main constraints: no heavy machinery on-site, limited material transport from the nearest town (Tamale, 120 km).");
   const [extractionComplete, setExtractionComplete] = useState(false);
   
@@ -110,6 +116,10 @@ export default function NGOPortal() {
   const [checkedTasks, setCheckedTasks] = useState(new Set());
 
   const handleAnalyze = () => {
+    if (!region || !city || !situationPrompt.trim()) {
+      alert("Please fill out the Region, City, and Situation Input fields.");
+      return;
+    }
     setStep(1);
     setExtractionComplete(false);
     
@@ -174,8 +184,56 @@ export default function NGOPortal() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
             className="max-w-4xl mx-auto bg-[#111111] border border-neutral-800 rounded-xl overflow-hidden"
           >
+            {/* Location Form */}
+            <div className="p-6 md:p-8 border-b border-neutral-800">
+              <h2 className="text-xl font-bold text-white mb-1">Where will this be deployed?</h2>
+              <p className="text-[#3ecf8e] text-sm mb-6">We match parts and logistics with suppliers in your target area.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-white font-bold mb-2 text-sm">Country</label>
+                  <div className="bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-[#3ecf8e] cursor-not-allowed opacity-80">
+                    Philippines (Locked)
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-white font-bold mb-2 text-sm">Region *</label>
+                  <select 
+                    value={region} onChange={(e) => setRegion(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#3ecf8e] transition-colors"
+                  >
+                    <option value="">Select a region...</option>
+                    <option value="NCR">National Capital Region (NCR)</option>
+                    <option value="CAR">Cordillera Administrative Region (CAR)</option>
+                    <option value="Region I">Region I (Ilocos Region)</option>
+                    <option value="Region III">Region III (Central Luzon)</option>
+                    <option value="Region IV-A">Region IV-A (CALABARZON)</option>
+                    <option value="Region VII">Region VII (Central Visayas)</option>
+                    <option value="Region XI">Region XI (Davao Region)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-white font-bold mb-2 text-sm">City / Municipality *</label>
+                  <input 
+                    type="text" placeholder="e.g. Davao City" 
+                    value={city} onChange={(e) => setCity(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-white placeholder-neutral-600 focus:outline-none focus:border-[#3ecf8e] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white font-bold mb-2 text-sm">Barangay <span className="text-neutral-500 font-normal">(optional)</span></label>
+                  <input 
+                    type="text" placeholder="e.g. Barangay Bagumbayan" 
+                    value={barangay} onChange={(e) => setBarangay(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-white placeholder-neutral-600 focus:outline-none focus:border-[#3ecf8e] transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Situation Input */}
             <div className="px-6 py-4 border-b border-neutral-800 bg-[#161616]">
-              <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest">SITUATION INPUT</span>
+              <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest">SITUATION INPUT *</span>
             </div>
             <div className="p-6">
               <textarea
@@ -190,7 +248,8 @@ export default function NGOPortal() {
               <span className="text-neutral-600 text-xs">{situationPrompt.length} characters</span>
               <button 
                 onClick={handleAnalyze}
-                className="bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold text-sm px-6 py-3 rounded flex items-center transition-colors active:scale-95"
+                disabled={!region || !city || !situationPrompt.trim()}
+                className={`font-bold text-sm px-6 py-3 rounded flex items-center transition-colors active:scale-95 ${!region || !city || !situationPrompt.trim() ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-[#24b47e] hover:bg-[#3ecf8e] text-black'}`}
               >
                 <FiTarget className="mr-2" /> Analyze Community Situation
               </button>
