@@ -29,7 +29,7 @@ const CompatibilityAlert = ({ isOpen, onClose, onAutoFix }) => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-white dark:bg-black/70 backdrop-blur-sm"
             onClick={onClose}
           />
           <motion.div 
@@ -38,7 +38,7 @@ const CompatibilityAlert = ({ isOpen, onClose, onAutoFix }) => {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative bg-[#151515] border border-red-500/30 rounded-2xl p-8 max-w-2xl w-full shadow-[0_0_50px_rgba(239,68,68,0.15)] overflow-hidden"
           >
-            <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-white transition-colors">
+            <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 dark:text-neutral-500 hover:text-gray-900 dark:text-white transition-colors">
               <FiX className="w-6 h-6" />
             </button>
             
@@ -48,16 +48,16 @@ const CompatibilityAlert = ({ isOpen, onClose, onAutoFix }) => {
                 <FiAlertTriangle className="text-red-500 w-10 h-10 relative z-10" />
               </div>
               
-              <h3 className="text-white font-extrabold text-2xl mb-3">Will it Explode? Logic Level Mismatch Detected!</h3>
+              <h3 className="text-gray-900 dark:text-white font-extrabold text-2xl mb-3">Will it Explode? Logic Level Mismatch Detected!</h3>
               
-              <p className="text-neutral-400 text-base mb-8 leading-relaxed max-w-lg">
+              <p className="text-neutral-600 dark:text-neutral-400 text-base mb-8 leading-relaxed max-w-lg">
                 Your <strong className="text-red-400">ESP32-WROOM</strong> uses 3.3V logic, but the <strong className="text-red-400">5V Relay / LCD</strong> requires 5V. Connecting these directly can damage your microcontroller pins or cause erratic behavior.
               </p>
 
               <button 
                 onClick={handleFix}
                 disabled={isFixing}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-lg px-6 py-4 rounded-xl transition-colors shadow-[0_0_20px_rgba(239,68,68,0.3)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-red-500 hover:bg-red-600 text-gray-900 dark:text-white font-bold text-lg px-6 py-4 rounded-xl transition-colors shadow-[0_0_20px_rgba(239,68,68,0.3)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isFixing ? "Applying Fix..." : "+ Auto-Fix: Add Logic Level Shifter (₱50)"}
               </button>
