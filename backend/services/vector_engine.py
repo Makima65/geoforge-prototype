@@ -51,6 +51,12 @@ class VectorEngine:
                 Component(orig="Arduino Uno R3", local="ESP32-WROOM", notes="Better for IoT, readily available locally", supplier="Makerlab Electronics", price=350.0),
                 Component(orig="NEMA 17 Stepper", local="Generic NEMA 17 (1.5A)", notes="Standard torque, Makerlab Electronics", supplier="Makerlab Electronics", price=450.0),
                 Component(orig="L298N Motor Driver", local="A4988 Stepper Driver", notes="More efficient for 3D printer builds", supplier="E-Gizmo", price=120.0),
+                Component(orig="12V Power Supply", local="12V 5A Switching Power Supply", notes="Enough current for steppers", supplier="Makerlab Electronics", price=350.0),
+                Component(orig="Standard 5V Relay", local="5V Dual Channel Relay Module", notes="Standard 5V logic relay", supplier="E-Gizmo", price=95.0),
+                Component(orig="16x2 LCD", local="16x2 I2C LCD Display (5V)", notes="Requires 5V I2C logic lines", supplier="CircuitRocks", price=180.0),
+                Component(orig="DHT22 Sensor", local="DHT22 Temperature & Humidity Sensor", notes="Wide temp range", supplier="Makerlab Electronics", price=250.0),
+                Component(orig="Jumper Wires", local="Premium Jumper Wires (40pcs)", notes="Assorted M-M, M-F, F-F", supplier="E-Gizmo", price=85.0),
+                Component(orig="Push Buttons", local="Tactile Push Buttons (10pcs)", notes="Standard 6x6x5mm", supplier="Makerlab Electronics", price=30.0),
             ]
 
         match_quality = "High" if len(components) >= 3 else "Medium"

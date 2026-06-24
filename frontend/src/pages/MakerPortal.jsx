@@ -11,6 +11,7 @@ import AnimatedCheckbox from '../components/AnimatedCheckbox';
 import TerminalLoader from '../components/TerminalLoader';
 import GenerateButton from '../components/GenerateButton';
 import MarkCompleteCard from '../components/MarkCompleteCard';
+import CompatibilityAlert from '../components/CompatibilityAlert';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
@@ -366,6 +367,14 @@ export default function MakerPortal() {
         {/* STEP 1: Shopping Checklist */}
         {step === 1 && currentProject && (
           <motion.div key="step1" variants={slideVariants} initial="initial" animate="enter" exit="exit" className="w-full">
+            <CompatibilityAlert 
+              components={currentProject.components} 
+              onAutoFix={(newComponent) => {
+                const updated = { ...currentProject, components: [...currentProject.components, newComponent] };
+                updated.audit_log = [...(updated.audit_log || []), { action: "AI Auto-Fix applied for logic mismatch", timestamp: new Date().toLocaleString() }];
+                setCurrentProject(updated);
+              }} 
+            />
             <div className="flex items-start justify-between mb-8">
               <div className="flex-1 mr-8">
                 <div className="flex items-center group mb-1 border-b border-transparent hover:border-neutral-700 focus-within:border-[#3ecf8e] pb-1 transition-colors w-fit">
