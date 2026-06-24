@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiTrash2, FiEye, FiShoppingCart, FiClock, FiAlertTriangle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
+import Skeleton from '../components/Skeleton';
 
 export default function SavedBuilds() {
   const [carts, setCarts] = useState([]);
@@ -39,7 +40,32 @@ export default function SavedBuilds() {
       </div>
 
       {loading ? (
-        <div className="text-white text-center mt-20">Loading database...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1,2,3,4,5,6].map(i => (
+            <div key={i} className="bg-[#111111] border border-neutral-800 rounded-2xl h-[260px] flex flex-col overflow-hidden">
+              <div className="p-6 border-b border-neutral-800">
+                <div className="flex justify-between items-start mb-4">
+                  <Skeleton className="w-12 h-12 rounded-lg" />
+                  <Skeleton className="w-20 h-6 rounded" />
+                </div>
+                <Skeleton className="w-3/4 h-6 rounded mb-2" />
+                <Skeleton className="w-1/2 h-4 rounded" />
+              </div>
+              <div className="p-6 bg-[#0A0A0A] flex-1 flex flex-col justify-between">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <Skeleton className="w-16 h-3 rounded mb-2" />
+                    <Skeleton className="w-24 h-8 rounded" />
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <Skeleton className="w-16 h-3 rounded mb-2" />
+                    <Skeleton className="w-8 h-6 rounded" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : carts.length === 0 ? (
         <div className="bg-[#111111] border border-neutral-800 rounded-2xl p-16 flex flex-col items-center text-center">
           <div className="w-20 h-20 bg-[#1A1A1A] rounded-full flex items-center justify-center mb-6">

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FiPlus, FiTrendingUp, FiCheckCircle, FiDollarSign, FiActivity, FiCpu } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
+import Skeleton from '../components/Skeleton';
 
 export default function DashboardMetrics() {
   const navigate = useNavigate();
@@ -42,8 +43,16 @@ export default function DashboardMetrics() {
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         
-        {/* Card 1: Active Projects (Blue Theme) */}
-        <motion.div 
+        {loading ? (
+          <>
+            <Skeleton className="h-[136px] rounded-xl" />
+            <Skeleton className="h-[136px] rounded-xl" />
+            <Skeleton className="h-[136px] rounded-xl" />
+          </>
+        ) : (
+          <>
+            {/* Card 1: Active Projects (Blue Theme) */}
+            <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}
           className="group relative rounded-xl transition-all duration-500 z-0 bg-[#0A0A0A] border border-neutral-800 hover:border-transparent"
         >
@@ -107,6 +116,8 @@ export default function DashboardMetrics() {
             </div>
           </div>
         </motion.div>
+        </>
+        )}
       </div>
 
       {/* Call to Action for New Project */}
