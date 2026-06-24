@@ -12,18 +12,18 @@ const TerminalLoader = ({ isComplete, onFinished }) => {
       setStatusText('Extraction Complete!');
       const timer = setTimeout(() => {
         onFinished();
-      }, 1500);
+      }, 150);
       return () => clearTimeout(timer);
     }
 
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev < 40) return prev + Math.floor(Math.random() * 15) + 5;
-        if (prev < 80) return prev + Math.floor(Math.random() * 8) + 2;
-        if (prev < 98) return prev + Math.floor(Math.random() * 3) + 1;
+        if (prev < 40) return prev + Math.floor(Math.random() * 18) + 8;
+        if (prev < 80) return prev + Math.floor(Math.random() * 10) + 4;
+        if (prev < 98) return prev + Math.floor(Math.random() * 4) + 1;
         return 99;
       });
-    }, 400);
+    }, 200);
 
     return () => clearInterval(interval);
   }, [isComplete, onFinished]);
@@ -33,15 +33,15 @@ const TerminalLoader = ({ isComplete, onFinished }) => {
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="w-full bg-white dark:bg-[#0A0A0A] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden shadow-2xl mb-14"
+      className="w-full card rounded-xl overflow-hidden shadow-2xl mb-14"
     >
-      <div className="flex items-center px-4 py-3 bg-[#f8f9fa] dark:bg-[#111111] border-b border-neutral-200 dark:border-neutral-800">
+      <div className="flex items-center px-4 py-3 bg-panel border-b border-default">
         <div className="flex gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]"></div>
           <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
         </div>
-        <div className="text-neutral-600 dark:text-neutral-400 text-xs font-mono flex-1 text-center font-bold tracking-widest uppercase">
+        <div className="text-muted text-xs font-mono flex-1 text-center font-bold tracking-widest uppercase">
           Extracting Components...
         </div>
       </div>
@@ -58,12 +58,12 @@ const TerminalLoader = ({ isComplete, onFinished }) => {
         </div>
         
         <div className="flex justify-between items-center mb-2 font-mono text-sm">
-          <span className="text-[#3ecf8e]">{statusText}</span>
-          <span className="text-[#3ecf8e] font-bold">{Math.min(progress, 100)}%</span>
+          <span className="text-accent">{statusText}</span>
+          <span className="text-accent font-bold">{Math.min(progress, 100)}%</span>
         </div>
-        <div className="w-full bg-neutral-100 dark:bg-[#1A1A1A] h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-soft h-2 rounded-full overflow-hidden">
           <motion.div 
-            className="h-full bg-[#3ecf8e]"
+            className="h-full bg-accent"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ ease: "easeOut" }}

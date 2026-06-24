@@ -5,23 +5,15 @@ const MarkCompleteCard = ({ isCompleted, onToggle }) => {
   const [status, setStatus] = useState(isCompleted ? 'completed' : 'idle');
 
   useEffect(() => {
-    if (status !== 'animating' && status !== 'confirming') {
-      setStatus(isCompleted ? 'completed' : 'idle');
-    }
+    setStatus(isCompleted ? 'completed' : 'idle');
   }, [isCompleted]);
 
   const handleClick = () => {
     if (status === 'idle') {
       setStatus('confirming');
-      setTimeout(() => {
-        setStatus(prev => prev === 'confirming' ? 'idle' : prev);
-      }, 3000);
     } else if (status === 'confirming') {
-      setStatus('animating');
-      setTimeout(() => {
-        onToggle(true);
-        setStatus('completed');
-      }, 1500);
+      onToggle(true);
+      setStatus('completed');
     } else if (status === 'completed') {
       onToggle(false);
       setStatus('idle');

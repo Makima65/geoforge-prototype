@@ -135,11 +135,9 @@ export default function NGOPortal() {
     }
     setStep(1);
     setExtractionComplete(false);
-    
-    // Simulate AI extraction delay
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       setExtractionComplete(true);
-    }, 4000);
+    });
   };
 
   const handleExtractionComplete = () => {
@@ -275,13 +273,13 @@ export default function NGOPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-white p-6 md:p-12 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-page text-primary p-6 md:p-12 font-sans overflow-x-hidden">
       
       {/* Header Context */}
       <div className="max-w-5xl mx-auto mb-12">
-        <div className="flex items-center text-[11px] font-bold tracking-widest text-neutral-500 dark:text-neutral-500 uppercase mb-8">
-          <div className="w-2 h-2 rounded-full bg-[#24b47e] mr-3 animate-pulse"></div>
-          COMMUNITYPLANNER <span className="mx-2 text-neutral-700">/</span> <span className="text-neutral-600 dark:text-neutral-400">Field Solution Intelligence</span>
+        <div className="flex items-center text-[11px] font-bold tracking-widest text-muted uppercase mb-8">
+          <div className="w-2 h-2 rounded-full bg-accent mr-3 animate-pulse"></div>
+          COMMUNITYPLANNER <span className="mx-2 text-neutral-700">/</span> <span className="text-muted">Field Solution Intelligence</span>
         </div>
 
         <input 
@@ -291,19 +289,19 @@ export default function NGOPortal() {
           className="text-4xl font-extrabold tracking-tight mb-4 bg-transparent border-b border-transparent hover:border-neutral-300 dark:border-neutral-700 focus:border-[#3ecf8e] focus:outline-none transition-colors w-full max-w-2xl placeholder-neutral-700"
           placeholder="Enter Project Name..."
         />
-        <p className="text-neutral-600 dark:text-neutral-400 text-sm max-w-2xl leading-relaxed">
+        <p className="text-muted text-sm max-w-2xl leading-relaxed">
           Describe your community's challenge in plain language. The tool extracts context, generates solution options, optimizes a deployment plan, and estimates impact.
         </p>
 
         {/* Wizard Steps Indicator (Theme 2 Flow) */}
         <div className="flex items-center space-x-2 md:space-x-4 mt-8 text-xs font-bold tracking-wider uppercase text-neutral-600">
-          <span className={step >= 0 ? "text-[#3ecf8e]" : ""}>01 Assess</span>
+          <span className={step >= 0 ? "text-accent" : ""}>01 Assess</span>
           <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>02 Approve</span>
+          <span className={step >= 2 ? "text-accent" : ""}>02 Approve</span>
           <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>03 Deploy</span>
+          <span className={step >= 2 ? "text-accent" : ""}>03 Deploy</span>
           <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>04 Sustain</span>
+          <span className={step >= 2 ? "text-accent" : ""}>04 Sustain</span>
         </div>
       </div>
 
@@ -314,29 +312,29 @@ export default function NGOPortal() {
           <motion.div 
             key="input" 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="max-w-4xl mx-auto bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden"
+            className="max-w-4xl mx-auto card rounded-xl overflow-hidden"
           >
             {/* Location Form */}
-            <div className="p-6 md:p-8 border-b border-neutral-200 dark:border-neutral-800">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Where will this be deployed?</h2>
-              <p className="text-[#3ecf8e] text-sm mb-6">We match parts and logistics with suppliers in your target area.</p>
+            <div className="p-6 md:p-8 border-b border-default">
+              <h2 className="text-xl font-bold text-primary mb-1">Where will this be deployed?</h2>
+              <p className="text-accent text-sm mb-6">We match parts and logistics with suppliers in your target area.</p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-gray-900 dark:text-white font-bold mb-2 text-sm">Country</label>
-                  <div className="bg-neutral-100 dark:bg-[#1A1A1A] border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 text-[#3ecf8e] cursor-not-allowed opacity-80">
+                  <label className="block text-primary font-bold mb-2 text-sm">Country</label>
+                  <div className="bg-panel border border-default rounded-lg p-3 text-accent cursor-not-allowed opacity-80">
                     Philippines (Locked)
                   </div>
                 </div>
                 <div>
-                  <label className="block text-gray-900 dark:text-white font-bold mb-2 text-sm">Region *</label>
+                  <label className="block text-primary font-bold mb-2 text-sm">Region *</label>
                   <select 
                     value={region} 
                     onChange={(e) => {
                       setRegion(e.target.value);
                       setCity(''); // Reset city when region changes
                     }}
-                    className="w-full bg-neutral-100 dark:bg-[#1A1A1A] border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#3ecf8e] transition-colors"
+                    className="w-full bg-soft border border-default rounded-lg p-3 text-primary focus:outline-none focus:border-[#3ecf8e] transition-colors"
                   >
                     <option value="">Select a region...</option>
                     {Object.keys(PH_REGIONS_CITIES).map((r) => (
@@ -345,12 +343,12 @@ export default function NGOPortal() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-900 dark:text-white font-bold mb-2 text-sm">City / Municipality *</label>
+                  <label className="block text-primary font-bold mb-2 text-sm">City / Municipality *</label>
                   <select 
                     value={city} 
                     onChange={(e) => setCity(e.target.value)}
                     disabled={!region}
-                    className={`w-full bg-neutral-100 dark:bg-[#1A1A1A] border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#3ecf8e] transition-colors ${!region ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`w-full bg-soft border border-default rounded-lg p-3 text-primary focus:outline-none focus:border-[#3ecf8e] transition-colors ${!region ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <option value="">Select a city...</option>
                     {region && PH_REGIONS_CITIES[region].map((c) => (
@@ -359,35 +357,35 @@ export default function NGOPortal() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-900 dark:text-white font-bold mb-2 text-sm">Barangay <span className="text-neutral-500 dark:text-neutral-500 font-normal">(optional)</span></label>
+                  <label className="block text-primary font-bold mb-2 text-sm">Barangay <span className="text-muted font-normal">(optional)</span></label>
                   <input 
                     type="text" placeholder="e.g. Barangay Bagumbayan" 
                     value={barangay} onChange={(e) => setBarangay(e.target.value)}
-                    className="w-full bg-neutral-100 dark:bg-[#1A1A1A] border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 text-gray-900 dark:text-white placeholder-neutral-600 focus:outline-none focus:border-[#3ecf8e] transition-colors"
+                    className="w-full bg-soft border border-default rounded-lg p-3 text-primary placeholder-neutral-600 focus:outline-none focus:border-[#3ecf8e] transition-colors"
                   />
                 </div>
               </div>
             </div>
 
             {/* Situation Input */}
-            <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-[#161616]">
-              <span className="text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest">SITUATION INPUT *</span>
+            <div className="px-6 py-4 border-b border-default bg-panel-strong">
+              <span className="text-[11px] font-bold text-muted uppercase tracking-widest">SITUATION INPUT *</span>
             </div>
             <div className="p-6">
               <textarea
                 value={situationPrompt}
                 onChange={(e) => setSituationPrompt(e.target.value)}
                 rows={8}
-                className="w-full bg-transparent text-gray-900 dark:text-white placeholder-neutral-700 focus:outline-none text-sm leading-relaxed resize-none"
+                className="w-full bg-transparent text-primary placeholder-neutral-700 focus:outline-none text-sm leading-relaxed resize-none"
                 placeholder="Describe the problem, available resources, and constraints..."
               />
             </div>
-            <div className="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 bg-[#161616] flex justify-between items-center">
+            <div className="px-6 py-4 border-t border-default bg-panel-strong flex justify-between items-center">
               <span className="text-neutral-600 text-xs">{situationPrompt.length} characters</span>
               <button 
                 onClick={handleAnalyze}
                 disabled={!region || !city || !situationPrompt.trim()}
-                className={`font-bold text-sm px-6 py-3 rounded flex items-center transition-colors active:scale-95 ${!region || !city || !situationPrompt.trim() ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-500 cursor-not-allowed' : 'bg-[#24b47e] hover:bg-[#3ecf8e] text-black'}`}
+                className={`font-bold text-sm px-6 py-3 rounded flex items-center transition-colors active:scale-95 ${!region || !city || !situationPrompt.trim() ? 'bg-neutral-200 dark:bg-neutral-800 text-muted cursor-not-allowed' : 'bg-accent hover:bg-accent-strong text-black'}`}
               >
                 <FiTarget className="mr-2" /> Analyze Community Situation
               </button>
@@ -415,43 +413,43 @@ export default function NGOPortal() {
             <section>
               <SectionHeader number="01" title="Extracted Community Context" />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden bg-[#f8f9fa] dark:bg-[#111111]">
+                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 border border-default rounded-xl overflow-hidden bg-[#f8f9fa] dark:bg-surface-soft">
                   {/* Problem */}
-                  <div className="p-6 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800">
-                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-3">
+                  <div className="p-6 border-b md:border-b-0 md:border-r border-default">
+                    <h3 className="flex items-center text-[11px] font-bold text-muted uppercase tracking-widest mb-3">
                       <FiAlertTriangle className="mr-2 text-yellow-500" /> Problem
                     </h3>
-                    <p className="text-gray-900 dark:text-white leading-relaxed text-sm">{GHANA_MOCK_DATA.context.problem}</p>
+                    <p className="text-primary leading-relaxed text-sm">{GHANA_MOCK_DATA.context.problem}</p>
                   </div>
                   {/* Resources */}
-                  <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
-                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-3">
-                      <FiUsers className="mr-2 text-[#3ecf8e]" /> Resources
+                  <div className="p-6 border-b border-default">
+                    <h3 className="flex items-center text-[11px] font-bold text-muted uppercase tracking-widest mb-3">
+                      <FiUsers className="mr-2 text-accent" /> Resources
                     </h3>
                     <ul className="space-y-2">
                       {GHANA_MOCK_DATA.context.resources.map((item, i) => (
                         <li key={i} className="flex items-start text-sm text-neutral-300">
-                          <span className="text-[#3ecf8e] mr-2">•</span> {item}
+                          <span className="text-accent mr-2">•</span> {item}
                         </li>
                       ))}
                     </ul>
                   </div>
                   {/* Constraints */}
-                  <div className="p-6 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800">
-                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-3">
-                      <FiAlertTriangle className="mr-2 text-neutral-600 dark:text-neutral-400" /> Constraints
+                  <div className="p-6 border-b md:border-b-0 md:border-r border-default">
+                    <h3 className="flex items-center text-[11px] font-bold text-muted uppercase tracking-widest mb-3">
+                      <FiAlertTriangle className="mr-2 text-muted" /> Constraints
                     </h3>
                     <ul className="space-y-2">
                       {GHANA_MOCK_DATA.context.constraints.map((item, i) => (
                         <li key={i} className="flex items-start text-sm text-neutral-300">
-                          <span className="text-neutral-500 dark:text-neutral-500 mr-2">•</span> {item}
+                          <span className="text-muted mr-2">•</span> {item}
                         </li>
                       ))}
                     </ul>
                   </div>
                   {/* Priority */}
                   <div className="p-6">
-                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-3">
+                    <h3 className="flex items-center text-[11px] font-bold text-muted uppercase tracking-widest mb-3">
                       <FiTarget className="mr-2 text-orange-500" /> Priority
                     </h3>
                     <p className="text-orange-500 font-bold uppercase tracking-wider text-sm">{GHANA_MOCK_DATA.context.priority}</p>
@@ -459,7 +457,7 @@ export default function NGOPortal() {
                 </div>
 
                 {/* Target Map inside Section 1 */}
-                <div className="lg:col-span-1 border border-neutral-200 dark:border-neutral-800 rounded-xl bg-[#f8f9fa] dark:bg-[#111111] p-2 flex flex-col min-h-[300px]">
+                <div className="lg:col-span-1 border border-default rounded-xl bg-[#f8f9fa] dark:bg-surface-soft p-2 flex flex-col min-h-[300px]">
                   <StoreMap 
                     locationQuery={region && city ? `${city}, ${region}` : "Manila, NCR"}
                     pinType="ngo"
@@ -473,24 +471,24 @@ export default function NGOPortal() {
               <SectionHeader number="02" title="Recommended Solutions" />
               <div className="space-y-4">
                 {GHANA_MOCK_DATA.solutions.map((sol, i) => (
-                  <div key={sol.id} className={`p-6 border rounded-xl bg-[#f8f9fa] dark:bg-[#111111] transition-all ${i === 0 ? 'border-[#3ecf8e]/30 shadow-[0_0_20px_rgba(36,180,126,0.05)]' : 'border-neutral-200 dark:border-neutral-800'}`}>
+                  <div key={sol.id} className={`p-6 border rounded-xl bg-[#f8f9fa] dark:bg-surface-soft transition-all ${i === 0 ? 'border-[#3ecf8e]/30 shadow-accent-soft' : 'border-default'}`}>
                     
                     <div className="flex flex-wrap items-center justify-between mb-4">
                       <div className="flex items-center mb-2 md:mb-0">
-                        <div className={`w-8 h-8 rounded text-sm font-bold flex items-center justify-center mr-4 ${i === 0 ? 'bg-[#3ecf8e]/20 text-[#3ecf8e] border border-[#3ecf8e]/50' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'}`}>
+                        <div className={`w-8 h-8 rounded text-sm font-bold flex items-center justify-center mr-4 ${i === 0 ? 'bg-accent/20 text-accent border border-[#3ecf8e]/50' : 'bg-neutral-200 dark:bg-neutral-800 text-muted'}`}>
                           {sol.id}
                         </div>
-                        <h3 className={`text-lg font-bold ${i === 0 ? 'text-gray-900 dark:text-white' : 'text-neutral-300'}`}>{sol.title}</h3>
-                        {i === 0 && <span className="ml-4 px-2 py-0.5 rounded text-[10px] font-bold bg-[#3ecf8e] text-black uppercase tracking-widest">BEST FIT</span>}
+                        <h3 className={`text-lg font-bold ${i === 0 ? 'text-primary' : 'text-neutral-300'}`}>{sol.title}</h3>
+                        {i === 0 && <span className="ml-4 px-2 py-0.5 rounded text-[10px] font-bold bg-accent text-black uppercase tracking-widest">BEST FIT</span>}
                       </div>
                       
-                      <div className="flex items-center space-x-6 text-sm font-mono text-neutral-600 dark:text-neutral-400">
+                      <div className="flex items-center space-x-6 text-sm font-mono text-muted">
                         <span>{sol.cost}</span>
                         <span>{sol.time}</span>
                       </div>
                     </div>
 
-                    <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed mb-6">{sol.desc}</p>
+                    <p className="text-muted text-sm leading-relaxed mb-6">{sol.desc}</p>
                   </div>
                 ))}
               </div>
@@ -501,9 +499,9 @@ export default function NGOPortal() {
               <SectionHeader number="03" title="Implementation Process" />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {GHANA_MOCK_DATA.implementation.map((phase, idx) => (
-                  <div key={idx} className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 relative overflow-hidden">
+                  <div key={idx} className="bg-[#f8f9fa] dark:bg-surface-soft border border-default rounded-xl p-6 relative overflow-hidden">
                     <div className="absolute -right-4 -top-4 text-6xl font-bold text-neutral-900 select-none pointer-events-none opacity-50">0{idx + 1}</div>
-                    <h3 className="text-[11px] font-bold text-[#3ecf8e] uppercase tracking-widest mb-4 relative z-10">{phase.phase}</h3>
+                    <h3 className="text-[11px] font-bold text-accent uppercase tracking-widest mb-4 relative z-10">{phase.phase}</h3>
                     <ul className="space-y-3 relative z-10">
                       {phase.tasks.map((task, tIdx) => (
                         <li key={tIdx} className="text-sm text-neutral-300 leading-relaxed flex items-start">
@@ -519,10 +517,10 @@ export default function NGOPortal() {
             {/* SECTION 4: Compliance & Requirements */}
             <section>
               <SectionHeader number="04" title="Compliance & Approvals" />
-              <div className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden">
+              <div className="bg-[#f8f9fa] dark:bg-surface-soft border border-default rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left">
-                    <thead className="bg-[#151515] border-b border-neutral-200 dark:border-neutral-800 text-[10px] uppercase tracking-widest text-neutral-500 dark:text-neutral-500">
+                    <thead className="bg-panel-strong border-b border-default text-[10px] uppercase tracking-widest text-muted">
                       <tr>
                         <th className="px-6 py-4 font-bold">Requirement</th>
                         <th className="px-6 py-4 font-bold">Status</th>
@@ -533,16 +531,16 @@ export default function NGOPortal() {
                     </thead>
                     <tbody className="divide-y divide-neutral-800">
                       {GHANA_MOCK_DATA.compliance.map((item, idx) => (
-                        <tr key={idx} className="hover:bg-[#151515] transition-colors">
-                          <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{item.req}</td>
+                        <tr key={idx} className="hover:bg-panel-strong transition-colors">
+                          <td className="px-6 py-4 font-semibold text-primary">{item.req}</td>
                           <td className="px-6 py-4">
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${item.status === 'Required' ? 'bg-orange-500/20 text-orange-500' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-500'}`}>
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${item.status === 'Required' ? 'bg-orange-500/20 text-orange-500' : 'bg-neutral-200 dark:bg-neutral-800 text-muted'}`}>
                               {item.status}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-neutral-600 dark:text-neutral-400">{item.why}</td>
-                          <td className="px-6 py-4 text-neutral-600 dark:text-neutral-400">{item.who}</td>
-                          <td className="px-6 py-4 text-neutral-600 dark:text-neutral-400 font-mono text-xs">{item.time} ({item.dep})</td>
+                          <td className="px-6 py-4 text-muted">{item.why}</td>
+                          <td className="px-6 py-4 text-muted">{item.who}</td>
+                          <td className="px-6 py-4 text-muted font-mono text-xs">{item.time} ({item.dep})</td>
                         </tr>
                       ))}
                     </tbody>
@@ -555,35 +553,35 @@ export default function NGOPortal() {
             <section>
               <SectionHeader number="05" title="Resource & Operations Plan" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-6">
-                  <div className="flex items-center mb-4 text-[#3ecf8e]">
+                <div className="bg-[#f8f9fa] dark:bg-surface-soft border border-default rounded-xl p-6">
+                  <div className="flex items-center mb-4 text-accent">
                     <FiUsers className="mr-3" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">Personnel & Skills</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted">Personnel & Skills</h3>
                   </div>
                   <div className="space-y-4 text-sm">
-                    <div><strong className="text-gray-900 dark:text-white block mb-1">People Needed:</strong> <span className="text-neutral-600 dark:text-neutral-400">{GHANA_MOCK_DATA.resources.people}</span></div>
-                    <div><strong className="text-gray-900 dark:text-white block mb-1">Skills Needed:</strong> <span className="text-neutral-600 dark:text-neutral-400">{GHANA_MOCK_DATA.resources.skills}</span></div>
+                    <div><strong className="text-primary block mb-1">People Needed:</strong> <span className="text-muted">{GHANA_MOCK_DATA.resources.people}</span></div>
+                    <div><strong className="text-primary block mb-1">Skills Needed:</strong> <span className="text-muted">{GHANA_MOCK_DATA.resources.skills}</span></div>
                   </div>
                 </div>
 
-                <div className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-6">
+                <div className="bg-[#f8f9fa] dark:bg-surface-soft border border-default rounded-xl p-6">
                   <div className="flex items-center mb-4 text-blue-400">
                     <FiBriefcase className="mr-3" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">Logistics & Budget</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted">Logistics & Budget</h3>
                   </div>
                   <div className="space-y-4 text-sm">
-                    <div><strong className="text-gray-900 dark:text-white block mb-1">Budget Estimate:</strong> <span className="text-neutral-600 dark:text-neutral-400">{GHANA_MOCK_DATA.resources.budget}</span></div>
+                    <div><strong className="text-primary block mb-1">Budget Estimate:</strong> <span className="text-muted">{GHANA_MOCK_DATA.resources.budget}</span></div>
                   </div>
                 </div>
 
-                <div className="md:col-span-2 bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl p-6">
+                <div className="md:col-span-2 bg-[#f8f9fa] dark:bg-surface-soft border border-default rounded-xl p-6">
                   <div className="flex items-center mb-4 text-purple-400">
                     <FiShield className="mr-3" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">Maintenance & Sustainability</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-muted">Maintenance & Sustainability</h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div><strong className="text-gray-900 dark:text-white block mb-1">Maintenance Owner:</strong> <span className="text-neutral-600 dark:text-neutral-400">{GHANA_MOCK_DATA.resources.owner}</span></div>
-                    <div><strong className="text-gray-900 dark:text-white block mb-1">Sustainability Plan:</strong> <span className="text-neutral-600 dark:text-neutral-400">{GHANA_MOCK_DATA.resources.sustainability}</span></div>
+                    <div><strong className="text-primary block mb-1">Maintenance Owner:</strong> <span className="text-muted">{GHANA_MOCK_DATA.resources.owner}</span></div>
+                    <div><strong className="text-primary block mb-1">Sustainability Plan:</strong> <span className="text-muted">{GHANA_MOCK_DATA.resources.sustainability}</span></div>
                   </div>
                 </div>
               </div>
@@ -591,18 +589,18 @@ export default function NGOPortal() {
 
             {/* SECTION 6: Deployment Tracker */}
             <section>
-              <div className="flex justify-between items-end mb-6 border-b border-neutral-200 dark:border-neutral-800 pb-2">
+              <div className="flex justify-between items-end mb-6 border-b border-default pb-2">
                 <SectionHeader number="06" title="Deployment Tracker" noBorder />
               </div>
               
               <div className="mb-6 font-mono text-xs">
-                <span className={completedTasks === totalTasks ? 'text-[#3ecf8e]' : 'text-[#3ecf8e]'}>{completedTasks}/{totalTasks} tasks complete</span>
+                <span className={completedTasks === totalTasks ? 'text-accent' : 'text-accent'}>{completedTasks}/{totalTasks} tasks complete</span>
                 <div className="w-full h-1 bg-neutral-100 dark:bg-neutral-900 mt-2 rounded-full overflow-hidden">
-                  <div className="h-full bg-[#3ecf8e] transition-all duration-500" style={{ width: `${(completedTasks/totalTasks)*100}%` }}></div>
+                  <div className="h-full bg-accent transition-all duration-500" style={{ width: `${(completedTasks/totalTasks)*100}%` }}></div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-neutral-200 dark:bg-neutral-800 border border-default rounded-xl overflow-hidden">
                 <TaskColumn title="PREPARATION" tasks={GHANA_MOCK_DATA.actions.preparation} checkedTasks={checkedTasks} onToggle={toggleTask} />
                 <TaskColumn title="DEPLOYMENT" tasks={GHANA_MOCK_DATA.actions.deployment} checkedTasks={checkedTasks} onToggle={toggleTask} />
                 <TaskColumn title="TRAINING" tasks={GHANA_MOCK_DATA.actions.training} checkedTasks={checkedTasks} onToggle={toggleTask} />
@@ -613,10 +611,10 @@ export default function NGOPortal() {
             {/* SECTION 7: Impact Dashboard */}
             <section>
               <SectionHeader number="07" title="Impact Dashboard" />
-              <div className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden">
+              <div className="bg-[#f8f9fa] dark:bg-surface-soft border border-default rounded-xl overflow-hidden">
                 
                 {/* Metrics Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 border-b border-neutral-200 dark:border-neutral-800">
+                <div className="grid grid-cols-2 md:grid-cols-4 border-b border-default">
                   <MetricCard icon={<FiUsers />} value={GHANA_MOCK_DATA.impact.people} label="BENEFICIARIES" />
                   <MetricCard icon={<span className="font-serif">₱</span>} value={GHANA_MOCK_DATA.impact.totalCost} label="EST. COST" />
                   <MetricCard icon={<FiTrendingUp />} value={GHANA_MOCK_DATA.impact.readinessScore} label="READINESS SCORE" />
@@ -625,12 +623,12 @@ export default function NGOPortal() {
 
                 {/* Outcomes & Environmental Impact */}
                 <div className="grid grid-cols-1 md:grid-cols-2">
-                  <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800">
-                    <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-4">EXPECTED OUTCOMES</div>
+                  <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-default">
+                    <div className="text-[11px] font-bold text-muted uppercase tracking-widest mb-4">EXPECTED OUTCOMES</div>
                     <ul className="space-y-4">
                       {GHANA_MOCK_DATA.impact.outcomes.map((outcome, idx) => (
                         <li key={idx} className="flex items-start text-sm text-neutral-300">
-                          <svg className="w-5 h-5 text-[#3ecf8e] mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-5 h-5 text-accent mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                           </svg>
                           {outcome}
@@ -639,7 +637,7 @@ export default function NGOPortal() {
                     </ul>
                   </div>
                   <div className="p-6 md:p-8">
-                    <div className="text-[11px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-4">ENVIRONMENTAL & SOCIAL IMPACT</div>
+                    <div className="text-[11px] font-bold text-muted uppercase tracking-widest mb-4">ENVIRONMENTAL & SOCIAL IMPACT</div>
                     <p className="text-sm text-neutral-300 leading-relaxed">
                       {GHANA_MOCK_DATA.impact.envSocial}
                     </p>
@@ -649,10 +647,10 @@ export default function NGOPortal() {
             </section>
 
             {/* Save & Export Buttons */}
-            <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4 mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+            <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4 mt-12 pt-8 border-t border-default">
               <button 
                 onClick={handleSavePlan}
-                className="flex-1 bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold text-sm px-6 py-4 rounded-xl flex items-center justify-center transition-all active:scale-[0.98] shadow-lg shadow-[#24b47e]/20"
+                className="flex-1 bg-accent hover:bg-accent-strong text-black font-bold text-sm px-6 py-4 rounded-xl flex items-center justify-center transition-all active:scale-[0.98] shadow-lg shadow-[#24b47e]/20"
               >
                 <FiSave className="mr-2 w-5 h-5" /> SAVE IMPACT PLAN
               </button>
@@ -661,7 +659,7 @@ export default function NGOPortal() {
                 <button 
                   id="ngo-download-btn"
                   onClick={() => setShowExportMenu(!showExportMenu)} 
-                  className="w-full bg-transparent border border-[#24b47e]/50 hover:border-[#3ecf8e] text-[#3ecf8e] font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center uppercase tracking-wider text-sm"
+                  className="w-full bg-transparent border border-[#24b47e]/50 hover:border-[#3ecf8e] text-accent font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center uppercase tracking-wider text-sm"
                 >
                   <FiDownload className="mr-3 w-5 h-5" />
                   VIEW PROJECT SUMMARY & DOWNLOADS
@@ -673,24 +671,24 @@ export default function NGOPortal() {
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute bottom-full left-0 w-full mb-3 bg-neutral-100 dark:bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl shadow-2xl overflow-hidden z-50"
+                      className="absolute bottom-full left-0 w-full mb-3 bg-soft border border-[#2A2A2A] rounded-xl shadow-2xl overflow-hidden z-50"
                     >
                       <div className="p-3 border-b border-[#2A2A2A] flex justify-between items-center bg-[#222]">
-                        <span className="text-xs font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-widest">Export Formats</span>
-                        <button onClick={() => setShowExportMenu(false)} className="text-neutral-500 dark:text-neutral-500 hover:text-gray-900 dark:text-white p-1"><FiX /></button>
+                        <span className="text-xs font-bold text-muted uppercase tracking-widest">Export Formats</span>
+                        <button onClick={() => setShowExportMenu(false)} className="text-muted hover:text-primary p-1"><FiX /></button>
                       </div>
                       <div className="p-2 space-y-1">
-                        <button onClick={handleDownloadWord} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-gray-900 dark:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                        <button onClick={handleDownloadWord} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-primary hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
                           <FiFileText className="mr-3 text-blue-400 group-hover:scale-110 transition-transform" /> Download as Word Document (.doc)
                         </button>
-                        <button onClick={handleDownloadExcel} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-gray-900 dark:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                        <button onClick={handleDownloadExcel} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-primary hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
                           <FiGrid className="mr-3 text-green-500 group-hover:scale-110 transition-transform" /> Export Tasks to Excel (.csv)
                         </button>
                         <div className="h-px bg-[#2A2A2A] my-1 mx-2" />
-                        <button onClick={handleDownloadPDF} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-gray-900 dark:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                        <button onClick={handleDownloadPDF} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-primary hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
                           <FiFile className="mr-3 text-red-400 group-hover:scale-110 transition-transform" /> Generate PDF Report
                         </button>
-                        <button onClick={handleDownloadImage} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-gray-900 dark:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                        <button onClick={handleDownloadImage} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-primary hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
                           <FiCamera className="mr-3 text-purple-400 group-hover:scale-110 transition-transform" /> Save Screenshot (.png)
                         </button>
                       </div>
@@ -709,24 +707,24 @@ export default function NGOPortal() {
 
 // Subcomponents
 const SectionHeader = ({ number, title, noBorder }) => (
-  <div className={`flex items-center mb-6 ${noBorder ? '' : 'border-b border-neutral-200 dark:border-neutral-800 pb-2'} m-0`}>
-    <div className="text-[#3ecf8e] border border-[#3ecf8e]/30 bg-[#3ecf8e]/10 px-1.5 py-0.5 rounded text-[10px] font-bold mr-3">{number}</div>
-    <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white uppercase">{title}</h2>
+  <div className={`flex items-center mb-6 ${noBorder ? '' : 'border-b border-default pb-2'} m-0`}>
+    <div className="text-accent border border-[#3ecf8e]/30 bg-accent/10 px-1.5 py-0.5 rounded text-[10px] font-bold mr-3">{number}</div>
+    <h2 className="text-xl font-bold tracking-tight text-primary uppercase">{title}</h2>
   </div>
 );
 
 const TaskColumn = ({ title, tasks, checkedTasks, onToggle }) => (
-  <div className="bg-[#f8f9fa] dark:bg-[#111111] p-6">
-    <h3 className="text-[10px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest mb-4">{title}</h3>
+  <div className="bg-[#f8f9fa] dark:bg-surface-soft p-6">
+    <h3 className="text-[10px] font-bold text-muted uppercase tracking-widest mb-4">{title}</h3>
     <ul className="space-y-3">
       {tasks.map((task, idx) => {
         const isChecked = checkedTasks.has(task);
         return (
           <li key={idx} className="flex items-start cursor-pointer group" onClick={() => onToggle(task)}>
-            <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 mr-3 mt-0.5 transition-colors ${isChecked ? 'bg-[#3ecf8e] border-[#3ecf8e]' : 'border-neutral-300 dark:border-neutral-700 group-hover:border-[#3ecf8e]'}`}>
+            <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 mr-3 mt-0.5 transition-colors ${isChecked ? 'bg-accent border-[#3ecf8e]' : 'border-neutral-300 dark:border-neutral-700 group-hover:border-[#3ecf8e]'}`}>
               {isChecked && <FiCheck className="w-3 h-3 text-black" />}
             </div>
-            <span className={`text-sm transition-colors ${isChecked ? 'text-neutral-500 dark:text-neutral-500 line-through' : 'text-neutral-300 group-hover:text-gray-900 dark:text-white'}`}>{task}</span>
+            <span className={`text-sm transition-colors ${isChecked ? 'text-muted line-through' : 'text-neutral-300 group-hover:text-primary'}`}>{task}</span>
           </li>
         );
       })}
@@ -735,9 +733,9 @@ const TaskColumn = ({ title, tasks, checkedTasks, onToggle }) => (
 );
 
 const MetricCard = ({ icon, value, label, noBorder }) => (
-  <div className={`p-6 ${noBorder ? '' : 'border-r border-neutral-200 dark:border-neutral-800'}`}>
-    <div className="text-[#3ecf8e] mb-2">{icon}</div>
-    <div className="text-3xl font-extrabold text-gray-900 dark:text-white mb-1">{value}</div>
-    <div className="text-[10px] font-bold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest">{label}</div>
+  <div className={`p-6 ${noBorder ? '' : 'border-r border-default'}`}>
+    <div className="text-accent mb-2">{icon}</div>
+    <div className="text-3xl font-extrabold text-primary mb-1">{value}</div>
+    <div className="text-[10px] font-bold text-muted uppercase tracking-widest">{label}</div>
   </div>
 );
