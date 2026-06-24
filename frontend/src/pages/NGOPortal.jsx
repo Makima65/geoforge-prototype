@@ -108,7 +108,13 @@ const GHANA_MOCK_DATA = {
 };
 
 export default function NGOPortal() {
-  const [step, setStep] = useState(0); // 0 = Input, 1 = Loading, 2 = Dashboard
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const editProject = location.state?.editProject;
+  const projectName = editProject?.title || location.state?.projectName || "Community Situation Analysis";
+
+  const [step, setStep] = useState(editProject ? 2 : 0); // 0 = Input, 1 = Loading, 2 = Dashboard
   
   // Location State
   const [region, setRegion] = useState('');
@@ -121,11 +127,6 @@ export default function NGOPortal() {
   // Checklist State
   const [checkedTasks, setCheckedTasks] = useState(new Set());
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Pick up project name from Wizard
-  const projectName = location.state?.projectName || "Community Situation Analysis";
 
   const handleAnalyze = () => {
     if (!region || !city || !situationPrompt.trim()) {

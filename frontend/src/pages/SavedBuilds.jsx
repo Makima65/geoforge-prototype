@@ -149,7 +149,7 @@ export default function SavedBuilds() {
                 </div>
 
                 <div className="space-y-3">
-                  <button onClick={() => navigate('/new', { state: { editProject: cart } })} className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white border border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
+                  <button onClick={() => navigate(activeTab === 'ngo' ? '/ngo' : '/new', { state: { editProject: cart } })} className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white border border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
                     <FiEye className="mr-2" /> {activeTab === 'ngo' ? 'View Impact Plan' : 'View Full Tracker'}
                   </button>
                   <button onClick={() => setCartToDelete(cart)} className="w-full bg-transparent hover:bg-red-500/10 text-neutral-500 hover:text-red-400 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center border border-transparent hover:border-red-500/20">
