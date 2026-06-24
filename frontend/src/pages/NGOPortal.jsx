@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiAlertTriangle, FiUsers, FiClock, FiTarget, FiCheckCircle, FiChevronRight, FiCheck, FiSave, FiDownload, FiMapPin, FiFileText, FiGrid, FiFile, FiCamera, FiX } from 'react-icons/fi';
+import { FiAlertTriangle, FiUsers, FiClock, FiTarget, FiCheckCircle, FiChevronRight, FiCheck, FiSave, FiDownload, FiMapPin, FiFileText, FiGrid, FiFile, FiCamera, FiX, FiShield, FiBriefcase, FiTrendingUp } from 'react-icons/fi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { jsPDF } from 'jspdf';
@@ -9,7 +9,7 @@ import TerminalLoader from '../components/TerminalLoader';
 import StoreMap from '../components/map/StoreMap';
 import PH_REGIONS_CITIES from '../data/phLocations.json';
 
-// Mock Data representing the Ghana Water Crisis scenario
+// Enhanced Mock Data for the 7-section layout
 const GHANA_MOCK_DATA = {
   context: {
     problem: "Seasonal water access failure affecting 1,200 people; contamination risk from river source 3 km away",
@@ -47,28 +47,26 @@ const GHANA_MOCK_DATA = {
       desc: "8 community ferro-cement tanks (10,000 L each) with roof catchment on school and clinic buildings.",
       pros: ["No deep drilling needed", "Fast deployment"],
       cons: ["Fails during dry season", "Requires large roof catchment area"]
-    },
-    {
-      id: 'C',
-      title: "Well Rehab + Ceramic Filter",
-      cost: "$2,100",
-      time: "1-2 weeks",
-      match: 58,
-      desc: "Rehabilitate existing wells and install ceramic filtration + SODIS training as immediate low-cost intervention.",
-      pros: ["Immediate deployment", "Very cheap"],
-      cons: ["Does not solve dry season volume", "Requires constant filter cleaning"]
     }
   ],
-  optimizedPlan: {
-    title: "Borehole + Hand Pump — Localized",
-    cost: "$5,400",
-    saves: "$800",
-    modifications: [
-      "Source drilling rig from Tamale district depot — reduces rental cost by 40%",
-      "Substitute imported pump parts with locally-cast equivalents from Bolgatanga artisans",
-      "Phase completion: Borehole #1 (clinic site) by week 3, Borehole #2 (village center) by week 5",
-      "Volunteers handle backfilling and concrete surface pad — saves est. $800 in labor"
-    ]
+  implementation: [
+    { phase: "Phase 1 — Planning", tasks: ["Site assessment and hydrogeological survey", "Stakeholder meeting with village elders"] },
+    { phase: "Phase 2 — Preparation", tasks: ["Procurement of drilling rig and pump parts", "Volunteer team assignment and mobilization"] },
+    { phase: "Phase 3 — Deployment", tasks: ["Borehole drilling at clinic and village center", "Installation of hand pumps and surface pads"] },
+    { phase: "Phase 4 — Monitoring", tasks: ["Water quality testing (E. coli, turbidity)", "Establishment of maintenance committee"] }
+  ],
+  compliance: [
+    { req: "LGU Approval", status: "Required", why: "Public land use", who: "Municipal Mayor", time: "2 weeks", dep: "Phase 1" },
+    { req: "Barangay Endorsement", status: "Required", why: "Community buy-in", who: "Brgy Captain", time: "1 week", dep: "Phase 1" },
+    { req: "Landowner Permission", status: "Not Required", why: "Public clinic site", who: "N/A", time: "N/A", dep: "N/A" },
+    { req: "Environmental Review", status: "Required", why: "Groundwater extraction", who: "DENR / Water Board", time: "3 weeks", dep: "Phase 2" }
+  ],
+  resources: {
+    people: "1 Project Manager, 2 Drillers, 20 Volunteers",
+    skills: "Hydrogeology, Basic Construction, Community Organizing",
+    budget: "$5,400 (Allocated from WASH-Ghana)",
+    owner: "Local Water Committee (5 members)",
+    sustainability: "Monthly 50 GHS collection per household for maintenance fund."
   },
   actions: {
     preparation: [
@@ -99,10 +97,12 @@ const GHANA_MOCK_DATA = {
     totalCost: "$5,400",
     costPerPerson: "$4.50",
     timeline: "5 weeks",
+    readinessScore: "85%",
+    envSocial: "Eliminates 90% of plastic water waste; empowers local female committee leaders.",
     outcomes: [
       "Eliminate 4-month seasonal water gap for all households",
-      "~60% reduction in waterborne disease incidence (WHO borehole benchmark)",
-      "Water-fetching time reduced from 90 min/day to under 10 min for 340 households"
+      "~60% reduction in waterborne disease incidence",
+      "Water-fetching time reduced from 90 min/day to under 10 min"
     ]
   }
 };
@@ -259,7 +259,8 @@ export default function NGOPortal() {
         <p>${GHANA_MOCK_DATA.context.problem}</p>
         <h3>Optimized Plan</h3>
         <ul>
-          ${GHANA_MOCK_DATA.optimizedPlan.modifications.map(m => `<li>${m}</li>`).join('')}
+          <li>Cost: ${GHANA_MOCK_DATA.impact.totalCost}</li>
+          <li>People Reached: ${GHANA_MOCK_DATA.impact.people}</li>
         </ul>
       </body>
       </html>
@@ -294,17 +295,15 @@ export default function NGOPortal() {
           Describe your community's challenge in plain language. The tool extracts context, generates solution options, optimizes a deployment plan, and estimates impact.
         </p>
 
-        {/* Wizard Steps Indicator */}
+        {/* Wizard Steps Indicator (Theme 2 Flow) */}
         <div className="flex items-center space-x-2 md:space-x-4 mt-8 text-xs font-bold tracking-wider uppercase text-neutral-600">
-          <span className={step >= 0 ? "text-[#3ecf8e]" : ""}>01 Extract Context</span>
+          <span className={step >= 0 ? "text-[#3ecf8e]" : ""}>01 Assess</span>
           <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>02 Generate Options</span>
+          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>02 Approve</span>
           <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>03 Optimize Plan</span>
+          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>03 Deploy</span>
           <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>04 Action Tracker</span>
-          <FiChevronRight className="text-neutral-800" />
-          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>05 Impact</span>
+          <span className={step >= 2 ? "text-[#3ecf8e]" : ""}>04 Sustain</span>
         </div>
       </div>
 
@@ -412,153 +411,188 @@ export default function NGOPortal() {
             className="max-w-5xl mx-auto space-y-16 pb-20"
           >
             
-            {/* SECTION 01: Extracted Context */}
+            {/* SECTION 1: Extracted Context & Map */}
             <section>
               <SectionHeader number="01" title="Extracted Community Context" />
-              <div className="grid grid-cols-1 md:grid-cols-2 border border-neutral-800 rounded-xl overflow-hidden bg-[#111111]">
-                {/* Problem */}
-                <div className="p-8 border-b md:border-b-0 md:border-r border-neutral-800">
-                  <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">
-                    <FiAlertTriangle className="mr-2 text-yellow-500" /> Problem
-                  </h3>
-                  <p className="text-white leading-relaxed text-sm">{GHANA_MOCK_DATA.context.problem}</p>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 border border-neutral-800 rounded-xl overflow-hidden bg-[#111111]">
+                  {/* Problem */}
+                  <div className="p-6 border-b md:border-b-0 md:border-r border-neutral-800">
+                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-3">
+                      <FiAlertTriangle className="mr-2 text-yellow-500" /> Problem
+                    </h3>
+                    <p className="text-white leading-relaxed text-sm">{GHANA_MOCK_DATA.context.problem}</p>
+                  </div>
+                  {/* Resources */}
+                  <div className="p-6 border-b border-neutral-800">
+                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-3">
+                      <FiUsers className="mr-2 text-[#3ecf8e]" /> Resources
+                    </h3>
+                    <ul className="space-y-2">
+                      {GHANA_MOCK_DATA.context.resources.map((item, i) => (
+                        <li key={i} className="flex items-start text-sm text-neutral-300">
+                          <span className="text-[#3ecf8e] mr-2">•</span> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {/* Constraints */}
+                  <div className="p-6 border-b md:border-b-0 md:border-r border-neutral-800">
+                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-3">
+                      <FiAlertTriangle className="mr-2 text-neutral-400" /> Constraints
+                    </h3>
+                    <ul className="space-y-2">
+                      {GHANA_MOCK_DATA.context.constraints.map((item, i) => (
+                        <li key={i} className="flex items-start text-sm text-neutral-300">
+                          <span className="text-neutral-500 mr-2">•</span> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {/* Priority */}
+                  <div className="p-6">
+                    <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-3">
+                      <FiTarget className="mr-2 text-orange-500" /> Priority
+                    </h3>
+                    <p className="text-orange-500 font-bold uppercase tracking-wider text-sm">{GHANA_MOCK_DATA.context.priority}</p>
+                  </div>
                 </div>
-                {/* Resources */}
-                <div className="p-8 border-b border-neutral-800">
-                  <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">
-                    <FiUsers className="mr-2 text-[#3ecf8e]" /> Resources
-                  </h3>
-                  <ul className="space-y-3">
-                    {GHANA_MOCK_DATA.context.resources.map((item, i) => (
-                      <li key={i} className="flex items-start text-sm text-neutral-300">
-                        <span className="text-[#3ecf8e] mr-2">•</span> {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                {/* Constraints */}
-                <div className="p-8 border-b md:border-b-0 md:border-r border-neutral-800">
-                  <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">
-                    <FiAlertTriangle className="mr-2 text-neutral-400" /> Constraints
-                  </h3>
-                  <ul className="space-y-3">
-                    {GHANA_MOCK_DATA.context.constraints.map((item, i) => (
-                      <li key={i} className="flex items-start text-sm text-neutral-300">
-                        <span className="text-neutral-500 mr-2">•</span> {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                {/* Priority */}
-                <div className="p-8">
-                  <h3 className="flex items-center text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">
-                    <FiTarget className="mr-2 text-orange-500" /> Priority
-                  </h3>
-                  <p className="text-orange-500 font-bold uppercase tracking-wider text-sm">{GHANA_MOCK_DATA.context.priority}</p>
+
+                {/* Target Map inside Section 1 */}
+                <div className="lg:col-span-1 border border-neutral-800 rounded-xl bg-[#111111] p-2 flex flex-col min-h-[300px]">
+                  <StoreMap 
+                    locationQuery={region && city ? `${city}, ${region}` : "Manila, NCR"}
+                    pinType="ngo"
+                  />
                 </div>
               </div>
             </section>
 
-            {/* SECTION 02: Recommended Solutions */}
+            {/* SECTION 2: Recommended Solutions */}
             <section>
               <SectionHeader number="02" title="Recommended Solutions" />
               <div className="space-y-4">
                 {GHANA_MOCK_DATA.solutions.map((sol, i) => (
                   <div key={sol.id} className={`p-6 border rounded-xl bg-[#111111] transition-all ${i === 0 ? 'border-[#3ecf8e]/30 shadow-[0_0_20px_rgba(36,180,126,0.05)]' : 'border-neutral-800'}`}>
                     
-                    {/* Header Row */}
                     <div className="flex flex-wrap items-center justify-between mb-4">
                       <div className="flex items-center mb-2 md:mb-0">
                         <div className={`w-8 h-8 rounded text-sm font-bold flex items-center justify-center mr-4 ${i === 0 ? 'bg-[#3ecf8e]/20 text-[#3ecf8e] border border-[#3ecf8e]/50' : 'bg-neutral-800 text-neutral-400'}`}>
                           {sol.id}
                         </div>
                         <h3 className={`text-lg font-bold ${i === 0 ? 'text-white' : 'text-neutral-300'}`}>{sol.title}</h3>
+                        {i === 0 && <span className="ml-4 px-2 py-0.5 rounded text-[10px] font-bold bg-[#3ecf8e] text-black uppercase tracking-widest">BEST FIT</span>}
                       </div>
                       
                       <div className="flex items-center space-x-6 text-sm font-mono text-neutral-400">
                         <span>{sol.cost}</span>
                         <span>{sol.time}</span>
-                        <div className="flex items-center">
-                          {/* Match Bar */}
-                          <div className="w-16 h-1 bg-neutral-800 rounded-full mr-3 overflow-hidden">
-                            <div className={`h-full ${i === 0 ? 'bg-[#3ecf8e]' : 'bg-orange-500'}`} style={{ width: `${sol.match}%` }} />
-                          </div>
-                          <span className={i === 0 ? 'text-[#3ecf8e] font-bold' : 'text-neutral-300'}>{sol.match}%</span>
-                        </div>
                       </div>
                     </div>
 
-                    {/* Desc */}
                     <p className="text-neutral-400 text-sm leading-relaxed mb-6">{sol.desc}</p>
-
-                    {/* Pros/Cons */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                      <div>
-                        <div className="text-[10px] font-bold text-[#3ecf8e] uppercase tracking-widest mb-2">PROS</div>
-                        <ul className="space-y-1.5">
-                          {sol.pros.map((p, idx) => <li key={idx} className="text-neutral-300"><span className="text-[#3ecf8e] mr-1">+</span> {p}</li>)}
-                        </ul>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-2">CONS</div>
-                        <ul className="space-y-1.5">
-                          {sol.cons.map((c, idx) => <li key={idx} className="text-neutral-500"><span className="mr-1">-</span> {c}</li>)}
-                        </ul>
-                      </div>
-                    </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* SECTION 03: Optimized Plan & Supply Chain Map */}
+            {/* SECTION 3: Implementation Process */}
             <section>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <div className="lg:col-span-2">
-                  <SectionHeader number="03" title="Optimized Plan" />
-                  <div className="border border-neutral-800 rounded-xl bg-[#111111] overflow-hidden h-full">
-                    <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-[#151515]">
-                      <div className="flex items-center">
-                        <div className="w-6 h-6 rounded bg-[#3ecf8e]/20 text-[#3ecf8e] text-xs font-bold flex items-center justify-center mr-3 border border-[#3ecf8e]/50">A</div>
-                        <h3 className="text-white font-bold">{GHANA_MOCK_DATA.optimizedPlan.title}</h3>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-[#3ecf8e] font-bold text-xl">{GHANA_MOCK_DATA.optimizedPlan.cost}</div>
-                        <div className="text-neutral-500 text-xs">saves {GHANA_MOCK_DATA.optimizedPlan.saves}</div>
-                      </div>
-                    </div>
-                    <div className="p-6 md:p-8">
-                      <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">MODIFICATIONS APPLIED</div>
-                      <ul className="space-y-4">
-                        {GHANA_MOCK_DATA.optimizedPlan.modifications.map((mod, idx) => (
-                          <li key={idx} className="flex text-sm text-neutral-300 leading-relaxed">
-                            <span className="text-[#3ecf8e] font-mono mr-4 mt-0.5">0{idx + 1}</span>
-                            {mod}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+              <SectionHeader number="03" title="Implementation Process" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {GHANA_MOCK_DATA.implementation.map((phase, idx) => (
+                  <div key={idx} className="bg-[#111111] border border-neutral-800 rounded-xl p-6 relative overflow-hidden">
+                    <div className="absolute -right-4 -top-4 text-6xl font-bold text-neutral-900 select-none pointer-events-none opacity-50">0{idx + 1}</div>
+                    <h3 className="text-[11px] font-bold text-[#3ecf8e] uppercase tracking-widest mb-4 relative z-10">{phase.phase}</h3>
+                    <ul className="space-y-3 relative z-10">
+                      {phase.tasks.map((task, tIdx) => (
+                        <li key={tIdx} className="text-sm text-neutral-300 leading-relaxed flex items-start">
+                          <span className="text-neutral-600 mr-2 mt-0.5">▪</span> {task}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </div>
-
-                <div className="lg:col-span-1">
-                  <SectionHeader number="-" title="Target Deployment Area" />
-                  <div className="border border-neutral-800 rounded-xl bg-[#111111] p-2 h-full min-h-[300px] flex flex-col">
-                    <StoreMap 
-                      locationQuery={region && city ? `${city}, ${region}` : "Manila, NCR"}
-                      pinType="ngo"
-                    />
-                  </div>
-                </div>
-
+                ))}
               </div>
             </section>
 
-            {/* SECTION 04: Action Tracker */}
+            {/* SECTION 4: Compliance & Requirements */}
+            <section>
+              <SectionHeader number="04" title="Compliance & Approvals" />
+              <div className="bg-[#111111] border border-neutral-800 rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-[#151515] border-b border-neutral-800 text-[10px] uppercase tracking-widest text-neutral-500">
+                      <tr>
+                        <th className="px-6 py-4 font-bold">Requirement</th>
+                        <th className="px-6 py-4 font-bold">Status</th>
+                        <th className="px-6 py-4 font-bold">Why Required</th>
+                        <th className="px-6 py-4 font-bold">Approver</th>
+                        <th className="px-6 py-4 font-bold">Timeline / Dep</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-800">
+                      {GHANA_MOCK_DATA.compliance.map((item, idx) => (
+                        <tr key={idx} className="hover:bg-[#151515] transition-colors">
+                          <td className="px-6 py-4 font-semibold text-white">{item.req}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${item.status === 'Required' ? 'bg-orange-500/20 text-orange-500' : 'bg-neutral-800 text-neutral-500'}`}>
+                              {item.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-neutral-400">{item.why}</td>
+                          <td className="px-6 py-4 text-neutral-400">{item.who}</td>
+                          <td className="px-6 py-4 text-neutral-400 font-mono text-xs">{item.time} ({item.dep})</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            {/* SECTION 5: Resource & Operations Plan */}
+            <section>
+              <SectionHeader number="05" title="Resource & Operations Plan" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-[#111111] border border-neutral-800 rounded-xl p-6">
+                  <div className="flex items-center mb-4 text-[#3ecf8e]">
+                    <FiUsers className="mr-3" />
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-400">Personnel & Skills</h3>
+                  </div>
+                  <div className="space-y-4 text-sm">
+                    <div><strong className="text-white block mb-1">People Needed:</strong> <span className="text-neutral-400">{GHANA_MOCK_DATA.resources.people}</span></div>
+                    <div><strong className="text-white block mb-1">Skills Needed:</strong> <span className="text-neutral-400">{GHANA_MOCK_DATA.resources.skills}</span></div>
+                  </div>
+                </div>
+
+                <div className="bg-[#111111] border border-neutral-800 rounded-xl p-6">
+                  <div className="flex items-center mb-4 text-blue-400">
+                    <FiBriefcase className="mr-3" />
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-400">Logistics & Budget</h3>
+                  </div>
+                  <div className="space-y-4 text-sm">
+                    <div><strong className="text-white block mb-1">Budget Estimate:</strong> <span className="text-neutral-400">{GHANA_MOCK_DATA.resources.budget}</span></div>
+                  </div>
+                </div>
+
+                <div className="md:col-span-2 bg-[#111111] border border-neutral-800 rounded-xl p-6">
+                  <div className="flex items-center mb-4 text-purple-400">
+                    <FiShield className="mr-3" />
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-400">Maintenance & Sustainability</h3>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><strong className="text-white block mb-1">Maintenance Owner:</strong> <span className="text-neutral-400">{GHANA_MOCK_DATA.resources.owner}</span></div>
+                    <div><strong className="text-white block mb-1">Sustainability Plan:</strong> <span className="text-neutral-400">{GHANA_MOCK_DATA.resources.sustainability}</span></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* SECTION 6: Deployment Tracker */}
             <section>
               <div className="flex justify-between items-end mb-6 border-b border-neutral-800 pb-2">
-                <SectionHeader number="04" title="Action Tracker" noBorder />
+                <SectionHeader number="06" title="Deployment Tracker" noBorder />
               </div>
               
               <div className="mb-6 font-mono text-xs">
@@ -576,32 +610,40 @@ export default function NGOPortal() {
               </div>
             </section>
 
-            {/* SECTION 05: Impact Summary */}
+            {/* SECTION 7: Impact Dashboard */}
             <section>
-              <SectionHeader number="05" title="Impact Summary" />
+              <SectionHeader number="07" title="Impact Dashboard" />
               <div className="bg-[#111111] border border-neutral-800 rounded-xl overflow-hidden">
                 
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 border-b border-neutral-800">
-                  <MetricCard icon={<FiUsers />} value={GHANA_MOCK_DATA.impact.people} label="PEOPLE REACHED" />
-                  <MetricCard icon={<span className="font-serif">$</span>} value={GHANA_MOCK_DATA.impact.totalCost} label="TOTAL COST" />
-                  <MetricCard icon={<span className="font-serif">$</span>} value={GHANA_MOCK_DATA.impact.costPerPerson} label="COST / PERSON" />
+                  <MetricCard icon={<FiUsers />} value={GHANA_MOCK_DATA.impact.people} label="BENEFICIARIES" />
+                  <MetricCard icon={<span className="font-serif">$</span>} value={GHANA_MOCK_DATA.impact.totalCost} label="EST. COST" />
+                  <MetricCard icon={<FiTrendingUp />} value={GHANA_MOCK_DATA.impact.readinessScore} label="READINESS SCORE" />
                   <MetricCard icon={<FiClock />} value={GHANA_MOCK_DATA.impact.timeline} label="TIMELINE" noBorder />
                 </div>
 
-                {/* Outcomes */}
-                <div className="p-6 md:p-8">
-                  <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">EXPECTED OUTCOMES</div>
-                  <ul className="space-y-4">
-                    {GHANA_MOCK_DATA.impact.outcomes.map((outcome, idx) => (
-                      <li key={idx} className="flex items-start text-sm text-neutral-300">
-                        <svg className="w-5 h-5 text-[#3ecf8e] mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
+                {/* Outcomes & Environmental Impact */}
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                  <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-neutral-800">
+                    <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">EXPECTED OUTCOMES</div>
+                    <ul className="space-y-4">
+                      {GHANA_MOCK_DATA.impact.outcomes.map((outcome, idx) => (
+                        <li key={idx} className="flex items-start text-sm text-neutral-300">
+                          <svg className="w-5 h-5 text-[#3ecf8e] mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                          </svg>
+                          {outcome}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="p-6 md:p-8">
+                    <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">ENVIRONMENTAL & SOCIAL IMPACT</div>
+                    <p className="text-sm text-neutral-300 leading-relaxed">
+                      {GHANA_MOCK_DATA.impact.envSocial}
+                    </p>
+                  </div>
                 </div>
               </div>
             </section>
