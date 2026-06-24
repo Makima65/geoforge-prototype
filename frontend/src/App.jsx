@@ -6,6 +6,8 @@ import DashboardMetrics from './pages/DashboardMetrics';
 import HumanitarianLayout from './components/layout/HumanitarianLayout';
 import HumanitarianPortal from './pages/HumanitarianPortal';
 import SavedBuilds from './pages/SavedBuilds';
+import ProjectWizard from './pages/ProjectWizard';
+import NGOPortal from './pages/NGOPortal';
 
 function App() {
   return (
@@ -17,9 +19,21 @@ function App() {
           </DashboardLayout>
         } />
 
+        <Route path="/wizard" element={
+          <DashboardLayout>
+            <ProjectWizard />
+          </DashboardLayout>
+        } />
+
         <Route path="/new" element={
           <DashboardLayout>
             <MakerPortal />
+          </DashboardLayout>
+        } />
+
+        <Route path="/ngo" element={
+          <DashboardLayout>
+            <NGOPortal />
           </DashboardLayout>
         } />
         

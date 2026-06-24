@@ -135,7 +135,7 @@ export default function DashboardMetrics() {
             Create a new project to automatically generate a localized ₱ PHP parts list and budget tracker directly from any hardware tutorial link.
           </p>
           <button 
-            onClick={() => navigate('/new')}
+            onClick={() => navigate('/wizard')}
             className="bg-[#3ecf8e] hover:bg-[#2ebc7a] text-black font-extrabold text-lg rounded-xl px-8 py-4 transition-all shadow-[0_0_30px_rgba(62,207,142,0.3)] hover:shadow-[0_0_40px_rgba(62,207,142,0.5)] transform hover:-translate-y-1"
           >
             + Create New Project
