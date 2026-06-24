@@ -793,9 +793,38 @@ export default function MakerPortal() {
                       <FiSave className="mr-2 w-5 h-5" /> {isUpdatingMode ? "UPDATE PROCUREMENT PLAN" : "SAVE PROCUREMENT PLAN"}
                     </button>
                     
-                    <button id="maker-download-btn" onClick={handleDownloadPDF} className="w-full bg-transparent border border-[#24b47e]/50 hover:border-[#3ecf8e] text-[#3ecf8e] font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center text-[13px] tracking-wide">
-                      <FiDownload className="mr-2 w-5 h-5" /> VIEW PROJECT SUMMARY & DOWNLOADS
-                    </button>
+                    <div className="relative">
+                      <button 
+                        onClick={() => setShowExportMenu(!showExportMenu)} 
+                        className="w-full bg-transparent border border-[#24b47e]/50 hover:border-[#3ecf8e] text-[#3ecf8e] font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center text-[13px] tracking-wide"
+                      >
+                        <FiDownload className="mr-2 w-5 h-5" /> VIEW PROJECT SUMMARY & DOWNLOADS
+                      </button>
+
+                      <AnimatePresence>
+                        {showExportMenu && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            className="absolute bottom-full left-0 right-0 mb-3 bg-[#0A0A0A] border border-[#3ecf8e]/30 rounded-xl shadow-2xl overflow-hidden flex flex-col z-10"
+                          >
+                            <button onClick={handleDownloadWord} className="flex items-center px-5 py-4 text-white hover:bg-[#151515] hover:text-[#3ecf8e] transition-colors border-b border-neutral-800 text-[13px] font-semibold text-left">
+                              <FiFileText className="mr-3 w-5 h-5" /> Download as Word Document
+                            </button>
+                            <button onClick={handleDownloadExcel} className="flex items-center px-5 py-4 text-white hover:bg-[#151515] hover:text-[#3ecf8e] transition-colors border-b border-neutral-800 text-[13px] font-semibold text-left">
+                              <FiGrid className="mr-3 w-5 h-5" /> Export as Excel (CSV)
+                            </button>
+                            <button onClick={handleDownloadPDF} id="maker-download-btn" className="flex items-center px-5 py-4 text-white hover:bg-[#151515] hover:text-[#3ecf8e] transition-colors border-b border-neutral-800 text-[13px] font-semibold text-left">
+                              <FiFile className="mr-3 w-5 h-5" /> Generate PDF Report
+                            </button>
+                            <button onClick={handleDownloadImage} className="flex items-center px-5 py-4 text-white hover:bg-[#151515] hover:text-[#3ecf8e] transition-colors text-[13px] font-semibold text-left">
+                              <FiCamera className="mr-3 w-5 h-5" /> Save Screenshot (.png)
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 </div>
               </div>
