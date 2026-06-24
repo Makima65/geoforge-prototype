@@ -112,8 +112,8 @@ export default function NGOPortal() {
   const location = useLocation();
   
   const editProject = location.state?.editProject;
-  const projectName = editProject?.title || location.state?.projectName || "Community Situation Analysis";
-
+  
+  const [projectName, setProjectName] = useState(editProject?.title || location.state?.projectName || "Community Situation Analysis");
   const [step, setStep] = useState(editProject ? 2 : 0); // 0 = Input, 1 = Loading, 2 = Dashboard
   
   // Location State
@@ -171,7 +171,15 @@ export default function NGOPortal() {
       ]
     };
 
-    const { error } = await supabase.from('saved_carts').insert([planToSave]);
+    let error;
+    if (editProject?.id) {
+      const res = await supabase.from('saved_carts').update(planToSave).eq('id', editProject.id);
+      error = res.error;
+    } else {
+      const res = await supabase.from('saved_carts').insert([planToSave]);
+      error = res.error;
+    }
+
     if (error) {
       console.error("Supabase error:", error);
       alert("Failed to save to cloud database.");
@@ -273,7 +281,13 @@ export default function NGOPortal() {
           COMMUNITYPLANNER <span className="mx-2 text-neutral-700">/</span> <span className="text-neutral-400">Field Solution Intelligence</span>
         </div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight mb-4">{projectName}</h1>
+        <input 
+          type="text" 
+          value={projectName} 
+          onChange={(e) => setProjectName(e.target.value)}
+          className="text-4xl font-extrabold tracking-tight mb-4 bg-transparent border-b border-transparent hover:border-neutral-700 focus:border-[#3ecf8e] focus:outline-none transition-colors w-full max-w-2xl placeholder-neutral-700"
+          placeholder="Enter Project Name..."
+        />
         <p className="text-neutral-400 text-sm max-w-2xl leading-relaxed">
           Describe your community's challenge in plain language. The tool extracts context, generates solution options, optimizes a deployment plan, and estimates impact.
         </p>
