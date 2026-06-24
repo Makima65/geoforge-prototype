@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { FiCpu, FiGlobe, FiBriefcase, FiLink, FiEdit3, FiUser, FiUsers, FiArrowRight } from 'react-icons/fi';
+import { FiCpu, FiGlobe, FiLink, FiEdit3, FiUser, FiUsers, FiArrowRight, FiChevronLeft } from 'react-icons/fi';
 
 export default function ProjectWizard() {
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ export default function ProjectWizard() {
   const getOrbColor = () => {
     if (category === 'maker') return 'from-cyan-500 via-blue-500 to-purple-600';
     if (category === 'ngo') return 'from-green-500 via-emerald-500 to-teal-600';
-    if (category === 'business') return 'from-amber-500 via-orange-500 to-red-600';
     return 'from-indigo-500 via-purple-500 to-pink-500'; // Default
   };
 
@@ -76,10 +75,6 @@ export default function ProjectWizard() {
                 <SelectionCard 
                   title="Social Impact" subtitle="NGO & Community" icon={FiGlobe} 
                   selected={category === 'ngo'} onClick={() => { setCategory('ngo'); nextStep(); }} 
-                />
-                <SelectionCard 
-                  title="Business" subtitle="Enterprise Solutions" icon={FiBriefcase} 
-                  selected={category === 'business'} onClick={() => { setCategory('business'); nextStep(); }} 
                 />
               </motion.div>
             )}
@@ -168,7 +163,7 @@ export default function ProjectWizard() {
             
             {/* Center icon */}
             <div className="relative z-10 text-white drop-shadow-2xl">
-              {category === 'maker' ? <FiCpu className="w-20 h-20" /> : category === 'ngo' ? <FiGlobe className="w-20 h-20" /> : <FiBriefcase className="w-20 h-20" />}
+              {category === 'maker' ? <FiCpu className="w-20 h-20" /> : <FiGlobe className="w-20 h-20" />}
             </div>
           </motion.div>
         </div>
