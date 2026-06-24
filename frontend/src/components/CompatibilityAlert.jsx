@@ -1,29 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
+import { FiAlertTriangle, FiX } from 'react-icons/fi';
 
-const CompatibilityAlert = ({ components, onAutoFix }) => {
-  const [hasMismatch, setHasMismatch] = useState(false);
+const CompatibilityAlert = ({ isOpen, onClose, onAutoFix }) => {
   const [isFixing, setIsFixing] = useState(false);
-  const [fixed, setFixed] = useState(false);
-
-  useEffect(() => {
-    if (!components) return;
-    
-    // Check for mismatch
-    const hasEsp32 = components.some(c => c.local && c.local.includes("ESP32"));
-    const has5VComponent = components.some(c => c.local && (c.local.includes("Relay Module") || c.local.includes("LCD Display")));
-    const hasShifter = components.some(c => c.local && c.local.includes("Logic Level Shifter"));
-
-    if (hasEsp32 && has5VComponent && !hasShifter) {
-      setHasMismatch(true);
-      setFixed(false);
-    } else if (hasShifter && hasMismatch) {
-      setHasMismatch(false);
-      setFixed(true);
-      setTimeout(() => setFixed(false), 5000); // Hide success message after 5s
-    }
-  }, [components, hasMismatch]);
 
   const handleFix = async () => {
     setIsFixing(true);
@@ -38,48 +18,52 @@ const CompatibilityAlert = ({ components, onAutoFix }) => {
       qty: 1
     });
     setIsFixing(false);
+    onClose();
   };
 
   return (
     <AnimatePresence>
-      {hasMismatch && (
-        <motion.div 
-          initial={{ opacity: 0, y: -10, height: 0 }} 
-          animate={{ opacity: 1, y: 0, height: 'auto' }} 
-          exit={{ opacity: 0, scale: 0.95, height: 0 }}
-          className="bg-red-500/10 border border-red-500/30 rounded-xl p-5 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-hidden"
-        >
-          <div className="flex items-start">
-            <div className="bg-red-500/20 p-2 rounded-lg mr-4 shrink-0 mt-1">
-              <FiAlertTriangle className="text-red-500 w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-lg">Will it Explode? Logic Level Mismatch Detected!</h4>
-              <p className="text-neutral-400 text-sm mt-1 leading-relaxed">
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={onClose}
+          />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+            animate={{ opacity: 1, scale: 1, y: 0 }} 
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative bg-[#151515] border border-red-500/30 rounded-2xl p-8 max-w-2xl w-full shadow-[0_0_50px_rgba(239,68,68,0.15)] overflow-hidden"
+          >
+            <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-white transition-colors">
+              <FiX className="w-6 h-6" />
+            </button>
+            
+            <div className="flex flex-col items-center text-center">
+              <div className="bg-red-500/20 p-4 rounded-full mb-6 relative">
+                <div className="absolute inset-0 bg-red-500/20 rounded-full animate-ping"></div>
+                <FiAlertTriangle className="text-red-500 w-10 h-10 relative z-10" />
+              </div>
+              
+              <h3 className="text-white font-extrabold text-2xl mb-3">Will it Explode? Logic Level Mismatch Detected!</h3>
+              
+              <p className="text-neutral-400 text-base mb-8 leading-relaxed max-w-lg">
                 Your <strong className="text-red-400">ESP32-WROOM</strong> uses 3.3V logic, but the <strong className="text-red-400">5V Relay / LCD</strong> requires 5V. Connecting these directly can damage your microcontroller pins or cause erratic behavior.
               </p>
-            </div>
-          </div>
-          <button 
-            onClick={handleFix}
-            disabled={isFixing}
-            className="shrink-0 bg-red-500 hover:bg-red-600 text-white font-bold px-5 py-3 rounded-lg transition-colors flex items-center shadow-[0_0_15px_rgba(239,68,68,0.2)] disabled:opacity-70"
-          >
-            {isFixing ? "Fixing..." : "+ Auto-Fix: Add Shifter (₱50)"}
-          </button>
-        </motion.div>
-      )}
 
-      {fixed && !hasMismatch && (
-        <motion.div 
-          initial={{ opacity: 0, y: -10, height: 0 }} 
-          animate={{ opacity: 1, y: 0, height: 'auto' }} 
-          exit={{ opacity: 0, height: 0 }}
-          className="bg-[#24b47e]/10 border border-[#24b47e]/30 rounded-xl p-4 mb-8 flex items-center overflow-hidden"
-        >
-          <FiCheckCircle className="text-[#3ecf8e] w-5 h-5 mr-3" />
-          <span className="text-[#3ecf8e] font-medium">Safe to build! Logic Level Shifter successfully added to your cart.</span>
-        </motion.div>
+              <button 
+                onClick={handleFix}
+                disabled={isFixing}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-lg px-6 py-4 rounded-xl transition-colors shadow-[0_0_20px_rgba(239,68,68,0.3)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isFixing ? "Applying Fix..." : "+ Auto-Fix: Add Logic Level Shifter (₱50)"}
+              </button>
+            </div>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

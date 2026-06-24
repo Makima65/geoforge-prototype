@@ -23,6 +23,7 @@ export default function MakerPortal() {
   const [viewProject, setViewProject] = useState(null);
   const [useSmartRecommendations, setUseSmartRecommendations] = useState(true);
   const [isUpdatingMode, setIsUpdatingMode] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -57,6 +58,12 @@ export default function MakerPortal() {
       return acc + (price * (curr.qty || 1));
     }, 0);
   };
+
+  // Mismatch Detection Logic
+  const hasEsp32 = currentProject?.components?.some(c => c.local && c.local.includes("ESP32"));
+  const has5VComponent = currentProject?.components?.some(c => c.local && (c.local.includes("Relay Module") || c.local.includes("LCD Display")));
+  const hasShifter = currentProject?.components?.some(c => c.local && c.local.includes("Logic Level Shifter"));
+  const hasMismatch = hasEsp32 && has5VComponent && !hasShifter;
   
   const [projects, setProjects] = useState([]);
 
@@ -367,14 +374,6 @@ export default function MakerPortal() {
         {/* STEP 1: Shopping Checklist */}
         {step === 1 && currentProject && (
           <motion.div key="step1" variants={slideVariants} initial="initial" animate="enter" exit="exit" className="w-full">
-            <CompatibilityAlert 
-              components={currentProject.components} 
-              onAutoFix={(newComponent) => {
-                const updated = { ...currentProject, components: [...currentProject.components, newComponent] };
-                updated.audit_log = [...(updated.audit_log || []), { action: "AI Auto-Fix applied for logic mismatch", timestamp: new Date().toLocaleString() }];
-                setCurrentProject(updated);
-              }} 
-            />
             <div className="flex items-start justify-between mb-8">
               <div className="flex-1 mr-8">
                 <div className="flex items-center group mb-1 border-b border-transparent hover:border-neutral-700 focus-within:border-[#3ecf8e] pb-1 transition-colors w-fit">
@@ -415,7 +414,17 @@ export default function MakerPortal() {
                           onChange={(checked) => toggleBought(idx, checked)} 
                         />
                       ) : (
-                        <span className="text-neutral-200 font-medium">{item.local}</span>
+                        <div className="flex items-center">
+                          <span className="text-neutral-200 font-medium">{item.local}</span>
+                          {hasMismatch && (item.local.includes("ESP32") || item.local.includes("Relay Module") || item.local.includes("LCD Display")) && (
+                            <div className="relative group ml-2 flex items-center cursor-pointer" onClick={() => setShowWarningModal(true)}>
+                              <FiAlertTriangle className="text-red-500 w-4 h-4 animate-pulse" />
+                              <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-red-500/10 border border-red-500/30 text-red-400 text-[11px] font-bold px-2 py-1 rounded whitespace-nowrap backdrop-blur-md">
+                                Logic Level Mismatch
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                     <div className={`col-span-3 text-sm ${item.isBought ? 'text-neutral-600 line-through' : 'text-neutral-400'}`}>{item.notes || 'Standard Spec'}</div>
