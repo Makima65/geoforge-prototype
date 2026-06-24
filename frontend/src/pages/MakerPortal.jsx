@@ -15,6 +15,8 @@ import CompatibilityAlert from '../components/CompatibilityAlert';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
+  const [prompt, setPrompt] = useState('I want to build a smart automated greenhouse. It needs to monitor soil moisture, ambient temperature, and automatically trigger 12V water pumps and ventilation fans. I want to monitor everything remotely over WiFi.');
+  const [inputMode, setInputMode] = useState('url'); // 'url' or 'text'
   const [loading, setLoading] = useState(false);
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractionComplete, setExtractionComplete] = useState(false);
@@ -100,14 +102,15 @@ export default function MakerPortal() {
     setExtractionComplete(false);
     
     try {
-      const result = await runVectorMatch({
-        project_name: "Extracted Build Specs",
-        url: url,
+      const payload = {
+        project_name: inputMode === 'text' ? prompt : "Extracted Build Specs",
+        url: inputMode === 'url' ? url : undefined,
         country: "Philippines",
         region: "NCR",
         city: "Manila",
         mode: "maker"
-      });
+      };
+      const result = await runVectorMatch(payload);
       
       const componentsWithOptions = result.components.map(c => {
         const basePrice = c.price || 500;
@@ -305,22 +308,65 @@ export default function MakerPortal() {
             {isExtracting ? (
               <TerminalLoader isComplete={extractionComplete} onFinished={handleExtractionDone} />
             ) : (
-              <div className="bg-[#151515] border border-neutral-800 rounded-2xl p-8 mb-14 shadow-lg">
-                <form onSubmit={handleSubmit}>
-                  <label className="block text-white font-semibold mb-3 text-[15px]">YouTube or GitHub tutorial URL</label>
-                  <div className="bg-[#0A0A0A] border border-neutral-800 rounded-xl p-1 mb-6 flex items-center transition-all focus-within:border-[#3ecf8e]/40 focus-within:ring-1 focus-within:ring-[#3ecf8e]/40">
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://youtube.com/watch?v=..."
-                    className="w-full bg-transparent px-4 py-3 text-white placeholder-neutral-600 focus:outline-none font-mono text-sm"
-                    required
-                  />
+              <div className="bg-[#151515] border border-neutral-800 rounded-2xl overflow-hidden mb-14 shadow-lg">
+                <div className="flex border-b border-neutral-800">
+                  <button 
+                    onClick={() => setInputMode('url')}
+                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors ${inputMode === 'url' ? 'text-[#3ecf8e] border-b-2 border-[#3ecf8e] bg-[#3ecf8e]/5' : 'text-neutral-500 hover:text-white'}`}
+                  >
+                    Extract Context (URL)
+                  </button>
+                  <button 
+                    onClick={() => setInputMode('text')}
+                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors ${inputMode === 'text' ? 'text-[#3ecf8e] border-b-2 border-[#3ecf8e] bg-[#3ecf8e]/5' : 'text-neutral-500 hover:text-white'}`}
+                  >
+                    Build Idea (Text)
+                  </button>
                 </div>
-                <GenerateButton disabled={loading} />
-              </form>
-            </div>
+                
+                <div className="p-8">
+                  <form onSubmit={handleSubmit}>
+                    {inputMode === 'url' ? (
+                      <>
+                        <label className="block text-white font-semibold mb-3 text-[15px] uppercase tracking-wider text-xs text-neutral-500">YOUTUBE OR GITHUB URL</label>
+                        <div className="bg-[#0A0A0A] border border-neutral-800 rounded-xl p-1 mb-6 flex items-center transition-all focus-within:border-[#3ecf8e]/40 focus-within:ring-1 focus-within:ring-[#3ecf8e]/40">
+                          <input
+                            type="url"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                            placeholder="https://youtube.com/watch?v=..."
+                            className="w-full bg-transparent px-4 py-3 text-white placeholder-neutral-600 focus:outline-none font-mono text-sm"
+                            required={inputMode === 'url'}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <label className="block text-white font-semibold mb-3 text-[15px] uppercase tracking-wider text-xs text-neutral-500">SITUATION INPUT</label>
+                        <div className="bg-[#0A0A0A] border border-neutral-800 rounded-xl p-1 mb-6 flex flex-col transition-all focus-within:border-[#3ecf8e]/40 focus-within:ring-1 focus-within:ring-[#3ecf8e]/40">
+                          <textarea
+                            value={prompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                            rows={5}
+                            className="w-full bg-transparent p-4 text-white placeholder-neutral-600 focus:outline-none text-sm leading-relaxed resize-none"
+                            required={inputMode === 'text'}
+                          />
+                          <div className="px-4 pb-3 flex justify-between items-center mt-2 border-t border-neutral-800/50 pt-3">
+                            <span className="text-neutral-500 text-xs">{prompt.length} characters</span>
+                            <button type="submit" disabled={loading} className="bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold rounded-lg px-6 py-2.5 active:scale-[0.98] transition-all flex items-center text-sm shadow-[0_0_15px_rgba(36,180,126,0.15)]">
+                              ⚡ Generate Build Plan
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {inputMode === 'url' && (
+                      <GenerateButton disabled={loading} />
+                    )}
+                  </form>
+                </div>
+              </div>
             )}
 
             <div>

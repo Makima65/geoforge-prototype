@@ -27,6 +27,17 @@ export const runVectorMatch = async (payload) => {
       { orig: "Standard Aluminum Extrusion 2020", local: "Local Aluminum Profile 2020", notes: "Readily available", price: 600 },
       { orig: "Waterproof Canvas 500GSM", local: "Trapal (Heavy Duty Tarpaulin)", notes: "Cheaper and adapted", price: 800 },
     ];
+  } else if (payload.project_name?.toLowerCase().includes("greenhouse") || project_title.toLowerCase().includes("greenhouse")) {
+    components = [
+      { orig: "ESP8266 NodeMCU", local: "ESP8266 NodeMCU V3", notes: "WiFi enabled for remote monitoring", supplier: "Makerlab Electronics", price: 250 },
+      { orig: "Soil Moisture Sensor", local: "Capacitive Soil Moisture Sensor v1.2", notes: "Corrosion resistant", supplier: "E-Gizmo", price: 80 },
+      { orig: "12V Water Pump", local: "12V Diaphragm Water Pump", notes: "Self-priming", supplier: "Makerlab", price: 350 },
+      { orig: "MOSFET Switch", local: "IRF520 MOSFET Driver Module", notes: "Safely drive 12V pump from 3.3V logic", supplier: "CircuitRocks", price: 65 },
+      { orig: "12V Fan", local: "120mm PC Exhaust Fan", notes: "For ventilation", supplier: "PC Express", price: 150 },
+      { orig: "DHT11 Sensor", local: "DHT11 Temperature & Humidity Module", notes: "Basic climate monitoring", supplier: "Makerlab", price: 90 },
+      { orig: "12V Power Supply", local: "12V 2A Power Adapter", notes: "Power for pump and fan", supplier: "E-Gizmo", price: 180 },
+      { orig: "Silicone Tubing", local: "8mm Silicone Tubing (2m)", notes: "For irrigation routing", supplier: "Hardware Store", price: 120 }
+    ];
   } else {
     components = [
       { orig: "Arduino Uno R3", local: "ESP32-WROOM", notes: "Better for IoT", supplier: "Makerlab Electronics", price: 350 },
