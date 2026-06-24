@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus, FiEdit3, FiAlertTriangle } from 'react-icons/fi';
+import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus, FiEdit3, FiAlertTriangle, FiFileText, FiGrid, FiFile, FiCamera } from 'react-icons/fi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { runVectorMatch } from '../services/api';
 import { supabase } from '../services/supabase';
@@ -26,6 +26,7 @@ export default function MakerPortal() {
   const [useSmartRecommendations, setUseSmartRecommendations] = useState(true);
   const [isUpdatingMode, setIsUpdatingMode] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -175,7 +176,98 @@ export default function MakerPortal() {
       console.error(e);
     } finally {
       btn.innerHTML = originalText;
+      setShowExportMenu(false);
     }
+  };
+
+  const handleDownloadImage = async () => {
+    const element = document.getElementById('maker-results-dashboard');
+    if (!element) return;
+    try {
+      const canvas = await html2canvas(element, { backgroundColor: '#0A0A0A', scale: 2 });
+      const link = document.createElement('a');
+      link.download = `GeoForge_Tracker_${currentProject.title.replace(/\s+/g, '_')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      setShowExportMenu(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDownloadExcel = () => {
+    if (!currentProject || !currentProject.components) return;
+    
+    // Create CSV content
+    const headers = ["Item Name", "Specification", "Quantity", "Supplier", "Price (PHP)"];
+    const rows = currentProject.components.map(item => [
+      `"${item.local}"`,
+      `"${item.notes || ''}"`,
+      item.qty || 1,
+      `"${item.supplier || 'Standard'}"`,
+      item.price || 0
+    ]);
+    
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(r => r.join(","))
+    ].join("\n");
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `GeoForge_BOM_${currentProject.title.replace(/\s+/g, '_')}.csv`;
+    link.click();
+    setShowExportMenu(false);
+  };
+
+  const handleDownloadWord = () => {
+    if (!currentProject || !currentProject.components) return;
+    
+    // Create a beautifully formatted HTML structure that Word can open
+    const htmlContent = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><title>Procurement Plan</title></head>
+      <body style="font-family: 'Segoe UI', Arial, sans-serif; padding: 20px;">
+        <h1 style="color: #24b47e;">GeoForge Procurement Plan</h1>
+        <h2 style="color: #333;">Project: ${currentProject.title}</h2>
+        <p><strong>Generated on:</strong> ${new Date().toLocaleDateString()}</p>
+        <hr style="border: 1px solid #eee; margin: 20px 0;" />
+        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+          <thead>
+            <tr style="background-color: #f5f5f5; text-align: left;">
+              <th>Item Name</th>
+              <th>Specification</th>
+              <th>Qty</th>
+              <th>Supplier</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${currentProject.components.map(item => `
+              <tr>
+                <td><strong>${item.local}</strong></td>
+                <td>${item.notes || 'Standard Spec'}</td>
+                <td>${item.qty || 1}</td>
+                <td>${item.supplier || 'Local Supply'}</td>
+                <td>P${(item.price || 0) * (item.qty || 1)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <h3 style="text-align: right; margin-top: 20px;">Total Estimated Cost: PHP ${calculateTotalCost(currentProject).toLocaleString()}</h3>
+      </body>
+      </html>
+    `;
+    
+    const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `GeoForge_Plan_${currentProject.title.replace(/\s+/g, '_')}.doc`;
+    link.click();
+    setShowExportMenu(false);
   };
 
   const slideVariants = {
