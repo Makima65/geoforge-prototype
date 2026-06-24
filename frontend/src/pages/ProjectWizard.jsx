@@ -15,6 +15,7 @@ export default function ProjectWizard() {
   const nextStep = () => setStep(prev => Math.min(prev + 1, 3));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
+  const handleFinish = () => {
     if (category === 'engineering') {
       navigate('/new', { state: { toolType, projectName } });
     } else {
