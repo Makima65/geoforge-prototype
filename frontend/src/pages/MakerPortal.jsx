@@ -728,6 +728,17 @@ export default function MakerPortal() {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Warning Modal Overlay */}
+      <CompatibilityAlert 
+        isOpen={showWarningModal}
+        onClose={() => setShowWarningModal(false)}
+        onAutoFix={(newComponent) => {
+          const updated = { ...currentProject, components: [...currentProject.components, newComponent] };
+          updated.audit_log = [...(updated.audit_log || []), { action: "AI Auto-Fix applied for logic mismatch", timestamp: new Date().toLocaleString() }];
+          setCurrentProject(updated);
+        }} 
+      />
     </div>
   );
 }
