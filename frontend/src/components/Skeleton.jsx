@@ -1,9 +1,8 @@
 import React from 'react';
-import './Skeleton.css';
 
 const Skeleton = ({ className = '', style = {} }) => {
   return (
-    <div className={`skeleton-shimmer ${className}`} style={style} />
+    <div className={`animate-pulse bg-gray-200 dark:bg-neutral-800 rounded ${className}`} style={style} />
   );
 };
 

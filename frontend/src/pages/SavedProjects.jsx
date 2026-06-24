@@ -57,7 +57,8 @@ export default function SavedProjects() {
     if (cart.deleted_at !== null) return false;
 
     if (activeTab === 'community') return cart.category === 'impact' || cart.category === 'community' || cart.mode === 'ngo';
-    return cart.category === 'engineering' || !cart.category || cart.mode === 'maker'; // Default to engineering for legacy carts
+    if (activeTab === 'engineering') return cart.category === 'engineering' || cart.mode === 'maker' || (!cart.category && cart.mode !== 'ngo');
+    return false;
   });
 
   return (
