@@ -70,7 +70,7 @@ export default function SavedProjects() {
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-2 mb-8 bg-surface-soft p-1.5 rounded-xl border border-default w-full max-w-xl">
+      <div className="flex overflow-x-auto whitespace-nowrap scrollbar-hide space-x-2 mb-8 bg-surface-soft p-1.5 rounded-xl border border-default w-full max-w-xl">
         <button
           onClick={() => setActiveTab('engineering')}
           className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'engineering' ? 'bg-soft text-blue-400 shadow-sm' : 'text-muted hover:text-primary hover:bg-panel-strong'}`}

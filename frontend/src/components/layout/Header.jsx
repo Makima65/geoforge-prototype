@@ -1,13 +1,20 @@
 import React from 'react';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { FiSun, FiMoon, FiMenu } from 'react-icons/fi';
 import { useTheme } from '../ThemeProvider';
 
-export default function Header() {
+export default function Header({ toggleSidebar }) {
   const { resolvedTheme, toggleTheme } = useTheme();
 
   return (
-    <header className="h-20 border-b border-default bg-surface/90 backdrop-blur-md sticky top-0 z-40 flex items-center justify-between px-10 transition-colors">
-      <h1 className="text-xl font-bold tracking-tight text-primary">Project Workspace</h1>
+    <header className="h-20 border-b border-default bg-surface/90 backdrop-blur-md sticky top-0 z-40 flex items-center justify-between px-6 md:px-10 transition-colors">
+      <div className="flex items-center space-x-3">
+        {toggleSidebar && (
+          <button onClick={toggleSidebar} className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-panel text-muted hover:text-primary transition-colors">
+            <FiMenu className="w-6 h-6" />
+          </button>
+        )}
+        <h1 className="text-xl font-bold tracking-tight text-primary">Project Workspace</h1>
+      </div>
       
       <div className="flex items-center space-x-5">
         <button 

@@ -11,7 +11,7 @@ export default function Sidebar({ isOpen, toggle }) {
   ];
 
   return (
-    <div className={`h-screen bg-surface border-r border-default flex flex-col fixed left-0 top-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] z-50 ${isOpen ? 'w-64' : 'w-[84px]'}`}>
+    <div className={`h-screen bg-surface border-r border-default flex flex-col fixed left-0 top-0 transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] z-50 ${isOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64 md:translate-x-0 md:w-[84px]'}`}>
       {/* Brand */}
       <div className="p-6">
         <div className="flex items-center mb-8 h-10">
