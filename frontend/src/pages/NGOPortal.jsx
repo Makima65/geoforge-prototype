@@ -582,6 +582,58 @@ export default function NGOPortal() {
               </div>
             </section>
 
+            {/* Save & Export Buttons */}
+            <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4 mt-12 pt-8 border-t border-neutral-800">
+              <button 
+                onClick={handleSavePlan}
+                className="flex-1 bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold text-sm px-6 py-4 rounded-xl flex items-center justify-center transition-all active:scale-[0.98] shadow-lg shadow-[#24b47e]/20"
+              >
+                <FiSave className="mr-2 w-5 h-5" /> SAVE IMPACT PLAN
+              </button>
+
+              <div className="relative flex-1">
+                <button 
+                  id="ngo-download-btn"
+                  onClick={() => setShowExportMenu(!showExportMenu)} 
+                  className="w-full bg-transparent border border-[#24b47e]/50 hover:border-[#3ecf8e] text-[#3ecf8e] font-bold rounded-xl px-6 py-4 active:scale-[0.98] transition-all flex items-center justify-center uppercase tracking-wider text-sm"
+                >
+                  <FiDownload className="mr-3 w-5 h-5" />
+                  VIEW PROJECT SUMMARY & DOWNLOADS
+                </button>
+                
+                <AnimatePresence>
+                  {showExportMenu && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute bottom-full left-0 w-full mb-3 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl shadow-2xl overflow-hidden z-50"
+                    >
+                      <div className="p-3 border-b border-[#2A2A2A] flex justify-between items-center bg-[#222]">
+                        <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Export Formats</span>
+                        <button onClick={() => setShowExportMenu(false)} className="text-neutral-500 hover:text-white p-1"><FiX /></button>
+                      </div>
+                      <div className="p-2 space-y-1">
+                        <button onClick={handleDownloadWord} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                          <FiFileText className="mr-3 text-blue-400 group-hover:scale-110 transition-transform" /> Download as Word Document (.doc)
+                        </button>
+                        <button onClick={handleDownloadExcel} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                          <FiGrid className="mr-3 text-green-500 group-hover:scale-110 transition-transform" /> Export Tasks to Excel (.csv)
+                        </button>
+                        <div className="h-px bg-[#2A2A2A] my-1 mx-2" />
+                        <button onClick={handleDownloadPDF} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                          <FiFile className="mr-3 text-red-400 group-hover:scale-110 transition-transform" /> Generate PDF Report
+                        </button>
+                        <button onClick={handleDownloadImage} className="w-full text-left px-4 py-3 text-sm text-neutral-300 hover:text-white hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center group">
+                          <FiCamera className="mr-3 text-purple-400 group-hover:scale-110 transition-transform" /> Save Screenshot (.png)
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+
           </motion.div>
         )}
       </AnimatePresence>
