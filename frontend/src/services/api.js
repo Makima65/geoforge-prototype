@@ -1,7 +1,4 @@
 export const runVectorMatch = async (payload) => {
-  // Simulate network latency of the Agora edge cascade & Vector search
-  await new Promise(resolve => setTimeout(resolve, 1500));
-
   let project_title = payload.project_name || "Custom Hardware Build";
   let thumbnail_url = "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80";
   let author_name = "Hardware Creator";

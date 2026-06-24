@@ -131,8 +131,8 @@ export default function StoreMap({ locationQuery, pinType = 'maker' }) {
   }, []);
 
   return (
-    <div className="w-full h-full min-h-[400px] rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-800 shadow-2xl relative z-0">
-      <div ref={mapRef} style={{ height: '100%', width: '100%', minHeight: '400px', background: '#0A0A0A' }} />
+    <div className="w-full h-full min-h-[400px] rounded-2xl overflow-hidden border border-default shadow-2xl relative z-0">
+      <div ref={mapRef} style={{ height: '100%', width: '100%', minHeight: '400px', background: 'var(--bg)' }} />
       <style>{`
         .leaflet-popup-content-wrapper {
           border-radius: 12px;
