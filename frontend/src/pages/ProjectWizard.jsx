@@ -43,14 +43,14 @@ export default function ProjectWizard() {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-80px)] flex flex-col pt-12 px-8 lg:px-20 relative overflow-hidden bg-black text-white">
+    <div className="w-full min-h-[calc(100vh-80px)] flex flex-col pt-12 px-8 lg:px-20 relative overflow-hidden bg-white dark:bg-black text-gray-900 dark:text-white">
       
       {/* Background ambient light */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-900/10 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Header */}
       <div className="mb-16 relative z-10">
-        <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white max-w-2xl leading-[1.1]">
+        <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-white max-w-2xl leading-[1.1]">
           Ready to bring your next idea to life?
         </h1>
       </div>
@@ -64,14 +64,14 @@ export default function ProjectWizard() {
             {/* STEP 1 */}
             {step === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-                <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Project Categories</h4>
+                <h4 className="text-[11px] font-bold text-neutral-500 dark:text-neutral-500 tracking-[0.2em] uppercase mb-6">Create a New Project</h4>
                 
                 <SelectionCard 
-                  title="Engineering Mode" subtitle="Hardware & Software" icon={FiCpu} 
+                  title="ENGINEERING" subtitle="Design, build, or prototype technical solutions including hardware, software, automation, and engineering workflows." icon={FiCpu} 
                   selected={category === 'engineering'} onClick={() => { setCategory('engineering'); nextStep(); }} 
                 />
                 <SelectionCard 
-                  title="Impact Planning Engine" subtitle="NGO & Community" icon={FiGlobe} 
+                  title="COMMUNITY INITIATIVES" subtitle="Plan and organize community, NGO, education, sustainability, and public-benefit initiatives." icon={FiGlobe} 
                   selected={category === 'impact'} onClick={() => { setCategory('impact'); nextStep(); }} 
                 />
               </motion.div>
@@ -80,30 +80,30 @@ export default function ProjectWizard() {
             {/* STEP 2 */}
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-                <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Select Tool Type</h4>
-                <SelectionCard title="Extract Context (URL)" subtitle="From YouTube/GitHub/Docs" icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
-                <SelectionCard title="Build Idea (Text)" subtitle="AI text generation" icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
+                <h4 className="text-[11px] font-bold text-neutral-500 dark:text-neutral-500 tracking-[0.2em] uppercase mb-6">Select how you want to start</h4>
+                <SelectionCard title="IMPORT REFERENCES" subtitle="Import information from YouTube, GitHub, documents, or external sources to create a project foundation." icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
+                <SelectionCard title="START FROM AN IDEA" subtitle="Describe your concept in text and let BOMO create an initial project structure." icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
               </motion.div>
             )}
 
             {/* STEP 3 */}
             {step === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-                <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Give it a name</h4>
-                <div className="bg-[#1A1A1A] border border-neutral-800 rounded-2xl p-2 mb-6">
+                <h4 className="text-[11px] font-bold text-neutral-500 dark:text-neutral-500 tracking-[0.2em] uppercase mb-6">Give it a name</h4>
+                <div className="bg-neutral-100 dark:bg-[#1A1A1A] border border-neutral-200 dark:border-neutral-800 rounded-2xl p-2 mb-6">
                   <input 
                     type="text" 
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                     placeholder="What should we call this project?"
-                    className="w-full bg-transparent p-4 text-white text-lg placeholder-neutral-600 focus:outline-none"
+                    className="w-full bg-transparent p-4 text-gray-900 dark:text-white text-lg placeholder-neutral-600 focus:outline-none"
                     autoFocus
                   />
                 </div>
                 <button 
                   onClick={handleFinish}
                   disabled={!projectName.trim()}
-                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center transition-all ${projectName.trim() ? 'bg-[#3ecf8e] hover:bg-[#2fb575] text-black shadow-[0_0_20px_rgba(62,207,142,0.3)]' : 'bg-[#1A1A1A] text-neutral-500 cursor-not-allowed'}`}
+                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center transition-all ${projectName.trim() ? 'bg-[#3ecf8e] hover:bg-[#2fb575] text-black shadow-[0_0_20px_rgba(62,207,142,0.3)]' : 'bg-neutral-100 dark:bg-[#1A1A1A] text-neutral-500 dark:text-neutral-500 cursor-not-allowed'}`}
                 >
                   Review Summary <FiArrowRight className="ml-2" />
                 </button>
@@ -121,7 +121,7 @@ export default function ProjectWizard() {
             <motion.button 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               onClick={prevStep}
-              className="absolute top-1/2 left-0 -mt-6 w-12 h-12 bg-neutral-800/50 hover:bg-neutral-700 rounded-2xl flex items-center justify-center text-neutral-400 hover:text-white transition-colors backdrop-blur-sm z-20"
+              className="absolute top-1/2 left-0 -mt-6 w-12 h-12 bg-neutral-200 dark:bg-neutral-800/50 hover:bg-neutral-700 rounded-2xl flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-gray-900 dark:text-white transition-colors backdrop-blur-sm z-20"
             >
               <FiChevronLeft className="w-6 h-6" />
             </motion.button>
@@ -137,7 +137,7 @@ export default function ProjectWizard() {
             <div className={`absolute inset-2 bg-gradient-to-bl ${getOrbColor()} rounded-[60%] blur-2xl opacity-50 animate-spin-slow`} style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
             <div className={`absolute inset-4 bg-gradient-to-t ${getOrbColor()} rounded-full blur-md opacity-90`} />
             
-            <div className="relative z-10 text-white drop-shadow-2xl">
+            <div className="relative z-10 text-gray-900 dark:text-white drop-shadow-2xl">
               {category === 'engineering' ? <FiCpu className="w-20 h-20" /> : <FiGlobe className="w-20 h-20" />}
             </div>
           </motion.div>
@@ -155,26 +155,26 @@ export default function ProjectWizard() {
             >
               {step === 1 && (
                 <>
-                  <h2 className="text-3xl font-bold text-white mb-4">Let's start your<br/>project.</h2>
-                  <p className="text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
-                    First, choose a primary category on the left to tell me what you're working on.
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Create a New<br/>Project.</h2>
+                  <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
+                    Select the project category that best matches your goal. This helps BOMO prepare the appropriate tools and workflow for your project.
                   </p>
                 </>
               )}
               {step === 2 && (
                 <>
-                  <div className="text-[11px] font-bold text-blue-500 tracking-[0.2em] uppercase mb-2">DEVELOPING: {category}</div>
-                  <h2 className="text-3xl font-bold text-white mb-4">Perfect Choice.</h2>
-                  <p className="text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
-                    Now, select the tool type. Whether it's extracting from a link or starting from a raw idea, specialized AI will be used.
+                  <div className="text-[11px] font-bold text-blue-500 tracking-[0.2em] uppercase mb-2">Selected Category: {category === 'engineering' ? 'Engineering' : 'Community Initiatives'}</div>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Create Your Project.</h2>
+                  <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
+                    Choose an input method to continue. BOMO will adapt the workflow based on your selected project category and input source.
                   </p>
                 </>
               )}
               {step === 3 && (
                 <>
                   <div className="text-[11px] font-bold text-[#3ecf8e] tracking-[0.2em] uppercase mb-2 bg-[#3ecf8e]/10 px-3 py-1 inline-block rounded-full ml-auto">FINAL STEP</div>
-                  <h2 className="text-3xl font-bold text-white mb-4 mt-2">The Final Touch.</h2>
-                  <p className="text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 mt-2">The Final Touch.</h2>
+                  <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
                     What name should we give to this {category === 'engineering' ? 'engineering' : 'impact'} project? This helps us keep things organized.
                   </p>
                 </>
@@ -194,14 +194,14 @@ const SelectionCard = ({ title, subtitle, icon: Icon, selected, onClick }) => (
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
     onClick={onClick}
-    className={`p-6 rounded-3xl border cursor-pointer transition-all flex items-center ${selected ? 'bg-[#2A2A2A] border-white/20 shadow-lg' : 'bg-[#151515] border-transparent hover:bg-[#1A1A1A]'}`}
+    className={`p-6 rounded-3xl border cursor-pointer transition-all flex items-start ${selected ? 'bg-[#2A2A2A] border-white/20 shadow-lg' : 'bg-[#151515] border-transparent hover:bg-neutral-100 dark:bg-[#1A1A1A]'}`}
   >
-    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mr-5 ${selected ? 'bg-white/10 text-white' : 'bg-black/50 text-neutral-400'}`}>
+    <div className={`w-12 h-12 shrink-0 rounded-xl flex items-center justify-center mr-5 ${selected ? 'bg-white/10 text-gray-900 dark:text-white' : 'bg-white dark:bg-black/50 text-neutral-600 dark:text-neutral-400'}`}>
       <Icon className="w-6 h-6" />
     </div>
     <div>
-      <div className="text-white font-bold text-lg">{title}</div>
-      <div className="text-neutral-500 text-[11px] font-bold tracking-widest uppercase mt-1">{subtitle}</div>
+      <div className="text-gray-900 dark:text-white font-bold text-lg leading-tight mb-2">{title}</div>
+      <div className="text-neutral-500 dark:text-neutral-500 text-xs font-medium leading-relaxed">{subtitle}</div>
     </div>
   </motion.div>
 );
@@ -211,11 +211,11 @@ const SquareCard = ({ title, icon: Icon, selected, onClick }) => (
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
     onClick={onClick}
-    className={`p-6 rounded-3xl border flex flex-col items-center justify-center cursor-pointer transition-all aspect-square ${selected ? 'bg-[#2A2A2A] border-white/20 shadow-lg' : 'bg-[#151515] border-transparent hover:bg-[#1A1A1A]'}`}
+    className={`p-6 rounded-3xl border flex flex-col items-center justify-center cursor-pointer transition-all aspect-square ${selected ? 'bg-[#2A2A2A] border-white/20 shadow-lg' : 'bg-[#151515] border-transparent hover:bg-neutral-100 dark:bg-[#1A1A1A]'}`}
   >
-    <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 ${selected ? 'bg-white/10 text-white' : 'bg-black/50 text-neutral-400'}`}>
+    <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 ${selected ? 'bg-white/10 text-gray-900 dark:text-white' : 'bg-white dark:bg-black/50 text-neutral-600 dark:text-neutral-400'}`}>
       <Icon className="w-6 h-6" />
     </div>
-    <div className="text-white font-bold text-sm tracking-wider uppercase">{title}</div>
+    <div className="text-gray-900 dark:text-white font-bold text-sm tracking-wider uppercase">{title}</div>
   </motion.div>
 );

@@ -6,12 +6,12 @@ import SidebarToggle from './SidebarToggle';
 export default function Sidebar({ isOpen, toggle }) {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: FiHome },
-    { name: 'Saved Builds', path: '/saved', icon: FiSave },
+    { name: 'Saved Projects', path: '/saved', icon: FiSave },
     { name: 'Settings', path: '/settings', icon: FiSettings },
   ];
 
   return (
-    <div className={`h-screen bg-[#111111] border-r border-neutral-800 flex flex-col fixed left-0 top-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] z-50 ${isOpen ? 'w-64' : 'w-[84px]'}`}>
+    <div className={`h-screen bg-[#f8f9fa] dark:bg-[#111111] border-r border-neutral-200 dark:border-neutral-800 flex flex-col fixed left-0 top-0 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] z-50 ${isOpen ? 'w-64' : 'w-[84px]'}`}>
       {/* Brand */}
       <div className="p-6">
         <div className="flex items-center mb-8 h-10">
@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, toggle }) {
                 `flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden ${
                   isActive
                     ? 'bg-[#24b47e]/10 text-[#3ecf8e] border border-[#24b47e]/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
-                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-white/5 border border-transparent'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-200 hover:bg-white/5 border border-transparent'
                 } ${isOpen ? 'space-x-3' : 'justify-center'}`
               }
             >
@@ -43,14 +43,14 @@ export default function Sidebar({ isOpen, toggle }) {
       </div>
 
       {/* User Profile Footer */}
-      <div className={`mt-auto border-t border-neutral-800/80 bg-neutral-900/20 transition-all duration-500 ${isOpen ? 'p-6' : 'p-4 flex justify-center'}`}>
+      <div className={`mt-auto border-t border-neutral-200 dark:border-neutral-800/80 bg-neutral-100 dark:bg-neutral-900/20 transition-all duration-500 ${isOpen ? 'p-6' : 'p-4 flex justify-center'}`}>
         <div className={`flex items-center cursor-pointer group ${isOpen ? 'space-x-3' : 'justify-center'}`}>
-          <div className="w-10 h-10 shrink-0 rounded-full bg-[#1A1A1A] flex items-center justify-center text-[#3ecf8e] font-bold border border-neutral-700 group-hover:border-[#3ecf8e]/50 transition-colors">
+          <div className="w-10 h-10 shrink-0 rounded-full bg-neutral-100 dark:bg-[#1A1A1A] flex items-center justify-center text-[#3ecf8e] font-bold border border-neutral-300 dark:border-neutral-700 group-hover:border-[#3ecf8e]/50 transition-colors">
             JR
           </div>
           <div className={`whitespace-nowrap transition-all duration-500 overflow-hidden ${isOpen ? 'opacity-100 w-auto ml-3' : 'opacity-0 w-0 hidden'}`}>
-            <div className="text-sm font-semibold text-white group-hover:text-[#3ecf8e] transition-colors">Juan Reyes</div>
-            <div className="text-xs text-[#3ecf8e]/80 font-medium tracking-wide">Maker • NCR</div>
+            <div className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-[#3ecf8e] transition-colors">Juan Reyes</div>
+            <div className="text-xs text-[#3ecf8e]/80 font-medium tracking-wide">Project Workspace</div>
           </div>
         </div>
       </div>

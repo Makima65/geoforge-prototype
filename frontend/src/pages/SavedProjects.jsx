@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import Skeleton from '../components/Skeleton';
 
-export default function SavedBuilds() {
+export default function SavedProjects() {
   const [carts, setCarts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartToDelete, setCartToDelete] = useState(null);
   const [deleteActionType, setDeleteActionType] = useState(null); // 'soft' or 'hard'
-  const [activeTab, setActiveTab] = useState('maker'); // 'maker', 'ngo', or 'trash'
+  const [activeTab, setActiveTab] = useState('engineering'); // 'engineering', 'community', or 'trash'
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,34 +56,34 @@ export default function SavedBuilds() {
     // For active tabs, hide deleted items
     if (cart.deleted_at !== null) return false;
 
-    if (activeTab === 'ngo') return cart.mode === 'ngo';
-    return !cart.mode || cart.mode === 'maker'; // Default to maker for legacy carts
+    if (activeTab === 'community') return cart.category === 'impact' || cart.category === 'community' || cart.mode === 'ngo';
+    return cart.category === 'engineering' || !cart.category || cart.mode === 'maker'; // Default to engineering for legacy carts
   });
 
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col p-6 md:p-10 relative">
       <div className="mb-8">
-        <h2 className="text-[32px] leading-tight font-extrabold tracking-tight text-white mb-2">Saved Projects</h2>
-        <p className="text-[#3ecf8e] font-medium tracking-wide">Manage your finalized maker builds and NGO impact plans.</p>
+        <h2 className="text-[32px] leading-tight font-extrabold tracking-tight text-gray-900 dark:text-white mb-2">Saved Projects</h2>
+        <p className="text-[#3ecf8e] font-medium tracking-wide">View, manage, and continue your saved projects.</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-2 mb-8 bg-[#111111] p-1.5 rounded-xl border border-neutral-800 w-full max-w-xl">
+      <div className="flex space-x-2 mb-8 bg-[#f8f9fa] dark:bg-[#111111] p-1.5 rounded-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-xl">
         <button
-          onClick={() => setActiveTab('maker')}
-          className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'maker' ? 'bg-[#1A1A1A] text-blue-400 shadow-sm' : 'text-neutral-500 hover:text-white hover:bg-[#161616]'}`}
+          onClick={() => setActiveTab('engineering')}
+          className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'engineering' ? 'bg-neutral-100 dark:bg-[#1A1A1A] text-blue-400 shadow-sm' : 'text-neutral-500 dark:text-neutral-500 hover:text-gray-900 dark:text-white hover:bg-[#161616]'}`}
         >
-          <FiShoppingCart className="mr-2" /> Maker Builds
+          <FiShoppingCart className="mr-2" /> Engineering Projects
         </button>
         <button
-          onClick={() => setActiveTab('ngo')}
-          className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'ngo' ? 'bg-[#1A1A1A] text-[#3ecf8e] shadow-sm' : 'text-neutral-500 hover:text-white hover:bg-[#161616]'}`}
+          onClick={() => setActiveTab('community')}
+          className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'community' ? 'bg-neutral-100 dark:bg-[#1A1A1A] text-[#3ecf8e] shadow-sm' : 'text-neutral-500 dark:text-neutral-500 hover:text-gray-900 dark:text-white hover:bg-[#161616]'}`}
         >
-          <FiGlobe className="mr-2" /> NGO Plans
+          <FiGlobe className="mr-2" /> Community Initiatives
         </button>
         <button
           onClick={() => setActiveTab('trash')}
-          className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'trash' ? 'bg-[#1A1A1A] text-red-400 shadow-sm' : 'text-neutral-500 hover:text-white hover:bg-[#161616]'}`}
+          className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'trash' ? 'bg-neutral-100 dark:bg-[#1A1A1A] text-red-400 shadow-sm' : 'text-neutral-500 dark:text-neutral-500 hover:text-gray-900 dark:text-white hover:bg-[#161616]'}`}
         >
           <FiTrash2 className="mr-2" /> Trash
         </button>
@@ -92,8 +92,8 @@ export default function SavedBuilds() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1,2,3,4,5,6].map(i => (
-            <div key={i} className="bg-[#111111] border border-neutral-800 rounded-2xl h-[260px] flex flex-col overflow-hidden">
-              <div className="p-6 border-b border-neutral-800">
+            <div key={i} className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-2xl h-[260px] flex flex-col overflow-hidden">
+              <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
                 <div className="flex justify-between items-start mb-4">
                   <Skeleton className="w-12 h-12 rounded-lg" />
                   <Skeleton className="w-20 h-6 rounded" />
@@ -101,7 +101,7 @@ export default function SavedBuilds() {
                 <Skeleton className="w-3/4 h-6 rounded mb-2" />
                 <Skeleton className="w-1/2 h-4 rounded" />
               </div>
-              <div className="p-6 bg-[#0A0A0A] flex-1 flex flex-col justify-between">
+              <div className="p-6 bg-white dark:bg-[#0A0A0A] flex-1 flex flex-col justify-between">
                 <div className="flex justify-between items-center">
                   <div>
                     <Skeleton className="w-16 h-3 rounded mb-2" />
@@ -117,30 +117,30 @@ export default function SavedBuilds() {
           ))}
         </div>
       ) : filteredCarts.length === 0 ? (
-        <div className="bg-[#111111] border border-neutral-800 rounded-2xl p-16 flex flex-col items-center text-center">
-          <div className="w-20 h-20 bg-[#1A1A1A] rounded-full flex items-center justify-center mb-6">
-            {activeTab === 'maker' ? <FiShoppingCart className="text-blue-500 w-8 h-8" /> : activeTab === 'ngo' ? <FiGlobe className="text-[#3ecf8e] w-8 h-8" /> : <FiTrash className="text-red-400 w-8 h-8" />}
+        <div className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-2xl p-16 flex flex-col items-center text-center">
+          <div className="w-20 h-20 bg-neutral-100 dark:bg-[#1A1A1A] rounded-full flex items-center justify-center mb-6">
+            {activeTab === 'engineering' ? <FiShoppingCart className="text-blue-500 w-8 h-8" /> : activeTab === 'community' ? <FiGlobe className="text-[#3ecf8e] w-8 h-8" /> : <FiTrash className="text-red-400 w-8 h-8" />}
           </div>
-          <h3 className="text-white font-bold text-xl mb-2">
-            {activeTab === 'trash' ? 'Trash is Empty' : `No Saved ${activeTab === 'maker' ? 'Builds' : 'Plans'} Yet`}
+          <h3 className="text-gray-900 dark:text-white font-bold text-xl mb-2">
+            {activeTab === 'trash' ? 'Archive is Empty' : `No Saved ${activeTab === 'engineering' ? 'Projects' : 'Initiatives'} Yet`}
           </h3>
-          <p className="text-neutral-500 mb-8 max-w-md">
-            {activeTab === 'maker' 
-              ? "You haven't finalized any procurement plans. Go back to the Maker Portal to source parts and save your tracker."
-              : activeTab === 'ngo'
-              ? "You haven't saved any Impact Planning frameworks yet. Go to the Impact Planning Engine to analyze a community."
-              : "Items deleted from your Maker or NGO tabs will appear here for 14 days before being permanently removed."}
+          <p className="text-neutral-500 dark:text-neutral-500 mb-8 max-w-md">
+            {activeTab === 'engineering' 
+              ? "You haven't finalized any engineering projects. Go back to create a new project and save your tracker."
+              : activeTab === 'community'
+              ? "You haven't saved any community initiatives yet. Go to create a new project to start planning."
+              : "Items deleted from your projects will appear here for 14 days before being permanently removed."}
           </p>
           {activeTab !== 'trash' && (
-            <button onClick={() => navigate(activeTab === 'maker' ? '/' : '/ngo')} className={`font-bold rounded-lg px-6 py-3 transition-colors ${activeTab === 'maker' ? 'bg-blue-500 hover:bg-blue-400 text-black' : 'bg-[#24b47e] hover:bg-[#3ecf8e] text-black'}`}>
-              {activeTab === 'maker' ? 'Start Sourcing Parts' : 'Analyze Community'}
+            <button onClick={() => navigate(activeTab === 'engineering' ? '/wizard' : '/wizard')} className={`font-bold rounded-lg px-6 py-3 transition-colors ${activeTab === 'engineering' ? 'bg-blue-500 hover:bg-blue-400 text-black' : 'bg-[#24b47e] hover:bg-[#3ecf8e] text-black'}`}>
+              {activeTab === 'engineering' ? 'Start a Project' : 'Plan an Initiative'}
             </button>
           )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCarts.map(cart => {
-            const isNgo = cart.mode === 'ngo';
+            const isNgo = cart.category === 'impact' || cart.category === 'community' || cart.mode === 'ngo';
             const daysLeft = cart.deleted_at ? 14 - Math.floor((new Date() - new Date(cart.deleted_at)) / (1000 * 60 * 60 * 24)) : 0;
             
             return (
@@ -148,11 +148,11 @@ export default function SavedBuilds() {
                 key={cart.id} 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`bg-[#111111] border border-neutral-800 rounded-2xl overflow-hidden transition-colors flex flex-col ${activeTab === 'trash' ? 'opacity-80 grayscale hover:grayscale-0' : 'hover:border-neutral-600'}`}
+                className={`bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden transition-colors flex flex-col ${activeTab === 'trash' ? 'opacity-80 grayscale hover:grayscale-0' : 'hover:border-neutral-600'}`}
               >
-                <div className="p-6 border-b border-neutral-800">
+                <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
                   <div className="flex justify-between items-start mb-4">
-                    <div className={`w-12 h-12 rounded-lg bg-[#1A1A1A] border flex items-center justify-center shrink-0 ${activeTab === 'trash' ? 'border-red-500/30' : isNgo ? 'border-[#3ecf8e]/30' : 'border-blue-500/30'}`}>
+                    <div className={`w-12 h-12 rounded-lg bg-neutral-100 dark:bg-[#1A1A1A] border flex items-center justify-center shrink-0 ${activeTab === 'trash' ? 'border-red-500/30' : isNgo ? 'border-[#3ecf8e]/30' : 'border-blue-500/30'}`}>
                       {isNgo ? <FiGlobe className={activeTab === 'trash' ? 'text-red-400 w-5 h-5' : 'text-[#3ecf8e] w-5 h-5'} /> : <FiShoppingCart className={activeTab === 'trash' ? 'text-red-400 w-5 h-5' : 'text-blue-400 w-5 h-5'} />}
                     </div>
                     <div className="flex flex-col items-end space-y-1">
@@ -168,7 +168,7 @@ export default function SavedBuilds() {
                             </span>
                           )}
                           {cart.is_completed && (
-                            <span className="bg-neutral-800 text-white text-[10px] font-bold px-2 py-1 rounded border border-neutral-600 uppercase">
+                            <span className="bg-neutral-200 dark:bg-neutral-800 text-gray-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded border border-neutral-600 uppercase">
                               Completed
                             </span>
                           )}
@@ -176,40 +176,40 @@ export default function SavedBuilds() {
                       )}
                     </div>
                   </div>
-                  <h3 className="text-white font-bold text-lg leading-snug mb-1 line-clamp-1" title={cart.title}>{cart.title}</h3>
-                  <div className="flex items-center text-neutral-500 text-xs font-medium">
+                  <h3 className="text-gray-900 dark:text-white font-bold text-lg leading-snug mb-1 line-clamp-1" title={cart.title}>{cart.title}</h3>
+                  <div className="flex items-center text-neutral-500 dark:text-neutral-500 text-xs font-medium">
                     <FiClock className="mr-1.5" /> {activeTab === 'trash' ? 'Trashed' : 'Saved'} {new Date(cart.deleted_at || cart.created_at).toLocaleDateString()}
                   </div>
                 </div>
 
-                <div className="p-6 bg-[#0A0A0A] flex-1">
+                <div className="p-6 bg-white dark:bg-[#0A0A0A] flex-1">
                   <div className="flex justify-between items-center mb-6">
                     <div>
-                      <div className="text-neutral-500 text-xs mb-1">Total Budget</div>
+                      <div className="text-neutral-500 dark:text-neutral-500 text-xs mb-1">Total Budget</div>
                       <div className={`font-black text-2xl ${activeTab === 'trash' ? 'text-red-400' : isNgo ? 'text-[#3ecf8e]' : 'text-blue-400'}`}>₱{cart.final_cost?.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-neutral-500 text-xs mb-1">{isNgo ? 'Action Items' : 'Total Parts'}</div>
-                      <div className="text-white font-bold text-lg">{isNgo ? '14' : (cart.components?.length || 0)}</div>
+                      <div className="text-neutral-500 dark:text-neutral-500 text-xs mb-1">{isNgo ? 'Action Items' : 'Total Parts'}</div>
+                      <div className="text-gray-900 dark:text-white font-bold text-lg">{isNgo ? '14' : (cart.components?.length || 0)}</div>
                     </div>
                   </div>
 
                   <div className="space-y-3">
                     {activeTab === 'trash' ? (
                       <>
-                        <button onClick={() => handleRestore(cart)} className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white border border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
+                        <button onClick={() => handleRestore(cart)} className="w-full bg-neutral-100 dark:bg-[#1A1A1A] hover:bg-[#2A2A2A] text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
                           <FiRefreshCcw className="mr-2" /> Restore Project
                         </button>
-                        <button onClick={() => { setCartToDelete(cart); setDeleteActionType('hard'); }} className="w-full bg-transparent hover:bg-red-500/10 text-neutral-500 hover:text-red-400 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center border border-transparent hover:border-red-500/20">
+                        <button onClick={() => { setCartToDelete(cart); setDeleteActionType('hard'); }} className="w-full bg-transparent hover:bg-red-500/10 text-neutral-500 dark:text-neutral-500 hover:text-red-400 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center border border-transparent hover:border-red-500/20">
                           <FiTrash2 className="mr-2" /> Delete Permanently
                         </button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => navigate(isNgo ? '/ngo' : '/new', { state: { editProject: cart } })} className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white border border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
+                        <button onClick={() => navigate(isNgo ? '/ngo' : '/new', { state: { editProject: cart } })} className="w-full bg-neutral-100 dark:bg-[#1A1A1A] hover:bg-[#2A2A2A] text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-800 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center">
                           <FiEye className="mr-2" /> {isNgo ? 'View Impact Plan' : 'View Full Tracker'}
                         </button>
-                        <button onClick={() => { setCartToDelete(cart); setDeleteActionType('soft'); }} className="w-full bg-transparent hover:bg-red-500/10 text-neutral-500 hover:text-red-400 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center border border-transparent hover:border-red-500/20">
+                        <button onClick={() => { setCartToDelete(cart); setDeleteActionType('soft'); }} className="w-full bg-transparent hover:bg-red-500/10 text-neutral-500 dark:text-neutral-500 hover:text-red-400 font-semibold rounded-lg px-4 py-2.5 transition-colors text-sm flex items-center justify-center border border-transparent hover:border-red-500/20">
                           <FiTrash2 className="mr-2" /> Move to Trash
                         </button>
                       </>
@@ -227,23 +227,23 @@ export default function SavedBuilds() {
         {cartToDelete && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
+            className="fixed inset-0 bg-white dark:bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
           >
-            <div className="bg-[#111111] border border-neutral-800 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl">
+            <div className="bg-[#f8f9fa] dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl">
               <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FiAlertTriangle className="text-red-500 w-8 h-8" />
               </div>
-              <h3 className="text-white font-bold text-lg mb-2">
+              <h3 className="text-gray-900 dark:text-white font-bold text-lg mb-2">
                 {deleteActionType === 'hard' ? 'Delete Permanently?' : `Move to Trash?`}
               </h3>
-              <p className="text-neutral-400 text-sm mb-6">
+              <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-6">
                 {deleteActionType === 'hard' 
                   ? `Are you sure you want to permanently delete "${cartToDelete.title}"? This action cannot be undone.`
                   : `Are you sure you want to move "${cartToDelete.title}" to the trash? It will be permanently deleted after 14 days.`}
               </p>
               <div className="grid grid-cols-2 gap-3">
-                <button onClick={() => { setCartToDelete(null); setDeleteActionType(null); }} className="bg-transparent border border-neutral-700 hover:bg-neutral-800 text-white font-semibold rounded-lg py-2.5 transition-colors">Cancel</button>
-                <button onClick={confirmDelete} className="bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg py-2.5 transition-colors">
+                <button onClick={() => { setCartToDelete(null); setDeleteActionType(null); }} className="bg-transparent border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 text-gray-900 dark:text-white font-semibold rounded-lg py-2.5 transition-colors">Cancel</button>
+                <button onClick={confirmDelete} className="bg-red-500 hover:bg-red-600 text-gray-900 dark:text-white font-semibold rounded-lg py-2.5 transition-colors">
                   {deleteActionType === 'hard' ? 'Yes, Delete' : 'Move to Trash'}
                 </button>
               </div>
