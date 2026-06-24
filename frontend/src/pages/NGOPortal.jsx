@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiAlertTriangle, FiUsers, FiClock, FiTarget, FiCheckCircle, FiChevronRight, FiCheck } from 'react-icons/fi';
+import { FiAlertTriangle, FiUsers, FiClock, FiTarget, FiCheckCircle, FiChevronRight, FiCheck, FiSave, FiDownload, FiMapPin, FiFileText, FiGrid, FiFile, FiCamera, FiX } from 'react-icons/fi';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { supabase } from '../services/supabase';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import TerminalLoader from '../components/TerminalLoader';
+import StoreMap from '../components/map/StoreMap';
 
 // Mock Data representing the Ghana Water Crisis scenario
 const GHANA_MOCK_DATA = {
@@ -114,6 +119,12 @@ export default function NGOPortal() {
   
   // Checklist State
   const [checkedTasks, setCheckedTasks] = useState(new Set());
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Pick up project name from Wizard
+  const projectName = location.state?.projectName || "Community Situation Analysis";
 
   const handleAnalyze = () => {
     if (!region || !city || !situationPrompt.trim()) {
@@ -146,6 +157,110 @@ export default function NGOPortal() {
   const totalTasks = 14; // Hardcoded for demo based on mock data
   const completedTasks = checkedTasks.size;
 
+  const handleSavePlan = async () => {
+    const planToSave = {
+      title: projectName,
+      mode: 'ngo',
+      final_cost: 5400, // from mock data
+      is_optimized: true,
+      components: [], // No physical hardware parts like Maker
+      audit_log: [
+        { action: "Impact Plan generated via CommunityPlanner", timestamp: new Date().toLocaleString() }
+      ]
+    };
+
+    const { error } = await supabase.from('saved_carts').insert([planToSave]);
+    if (error) {
+      console.error("Supabase error:", error);
+      alert("Failed to save to cloud database.");
+    } else {
+      navigate('/saved');
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    const element = document.getElementById('ngo-results-dashboard');
+    if (!element) return;
+    const btn = document.getElementById('ngo-download-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Generating PDF...';
+    try {
+      const canvas = await html2canvas(element, { backgroundColor: '#0A0A0A', scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`GeoForge_ImpactPlan_${projectName.replace(/\s+/g, '_')}.pdf`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      btn.innerHTML = originalText;
+      setShowExportMenu(false);
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    const element = document.getElementById('ngo-results-dashboard');
+    if (!element) return;
+    try {
+      const canvas = await html2canvas(element, { backgroundColor: '#0A0A0A', scale: 2 });
+      const link = document.createElement('a');
+      link.download = `GeoForge_ImpactPlan_${projectName.replace(/\s+/g, '_')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      setShowExportMenu(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDownloadExcel = () => {
+    const headers = ["Task Category", "Task Name", "Status"];
+    const rows = [
+      ...GHANA_MOCK_DATA.actions.preparation.map(t => ["PREPARATION", t, checkedTasks.has(t) ? "Complete" : "Pending"]),
+      ...GHANA_MOCK_DATA.actions.deployment.map(t => ["DEPLOYMENT", t, checkedTasks.has(t) ? "Complete" : "Pending"]),
+      ...GHANA_MOCK_DATA.actions.training.map(t => ["TRAINING", t, checkedTasks.has(t) ? "Complete" : "Pending"]),
+      ...GHANA_MOCK_DATA.actions.monitoring.map(t => ["MONITORING", t, checkedTasks.has(t) ? "Complete" : "Pending"]),
+    ];
+    
+    const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `GeoForge_Tasks_${projectName.replace(/\s+/g, '_')}.csv`;
+    link.click();
+    setShowExportMenu(false);
+  };
+
+  const handleDownloadWord = () => {
+    const htmlContent = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><title>Impact Plan</title></head>
+      <body style="font-family: 'Segoe UI', Arial, sans-serif; padding: 20px;">
+        <h1 style="color: #24b47e;">GeoForge Impact Plan</h1>
+        <h2 style="color: #333;">Project: ${projectName}</h2>
+        <p><strong>Generated on:</strong> ${new Date().toLocaleDateString()}</p>
+        <hr style="border: 1px solid #eee; margin: 20px 0;" />
+        <h3>Problem Statement</h3>
+        <p>${GHANA_MOCK_DATA.context.problem}</p>
+        <h3>Optimized Plan</h3>
+        <ul>
+          ${GHANA_MOCK_DATA.optimizedPlan.modifications.map(m => `<li>${m}</li>`).join('')}
+        </ul>
+      </body>
+      </html>
+    `;
+    const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `GeoForge_Plan_${projectName.replace(/\s+/g, '_')}.doc`;
+    link.click();
+    setShowExportMenu(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white p-6 md:p-12 font-sans overflow-x-hidden">
       
@@ -156,7 +271,7 @@ export default function NGOPortal() {
           COMMUNITYPLANNER <span className="mx-2 text-neutral-700">/</span> <span className="text-neutral-400">Field Solution Intelligence</span>
         </div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight mb-4">Community Situation Analysis</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight mb-4">{projectName}</h1>
         <p className="text-neutral-400 text-sm max-w-2xl leading-relaxed">
           Describe your community's challenge in plain language. The tool extracts context, generates solution options, optimizes a deployment plan, and estimates impact.
         </p>
@@ -267,6 +382,7 @@ export default function NGOPortal() {
         {/* STATE 2: The Dashboard */}
         {step === 2 && (
           <motion.div 
+            id="ngo-results-dashboard"
             key="dashboard" 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="max-w-5xl mx-auto space-y-16 pb-20"
@@ -371,31 +487,47 @@ export default function NGOPortal() {
               </div>
             </section>
 
-            {/* SECTION 03: Optimized Plan */}
+            {/* SECTION 03: Optimized Plan & Supply Chain Map */}
             <section>
-              <SectionHeader number="03" title="Optimized Plan" />
-              <div className="border border-neutral-800 rounded-xl bg-[#111111] overflow-hidden">
-                <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-[#151515]">
-                  <div className="flex items-center">
-                    <div className="w-6 h-6 rounded bg-[#3ecf8e]/20 text-[#3ecf8e] text-xs font-bold flex items-center justify-center mr-3 border border-[#3ecf8e]/50">A</div>
-                    <h3 className="text-white font-bold">{GHANA_MOCK_DATA.optimizedPlan.title}</h3>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[#3ecf8e] font-bold text-xl">{GHANA_MOCK_DATA.optimizedPlan.cost}</div>
-                    <div className="text-neutral-500 text-xs">saves {GHANA_MOCK_DATA.optimizedPlan.saves}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div className="lg:col-span-2">
+                  <SectionHeader number="03" title="Optimized Plan" />
+                  <div className="border border-neutral-800 rounded-xl bg-[#111111] overflow-hidden h-full">
+                    <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-[#151515]">
+                      <div className="flex items-center">
+                        <div className="w-6 h-6 rounded bg-[#3ecf8e]/20 text-[#3ecf8e] text-xs font-bold flex items-center justify-center mr-3 border border-[#3ecf8e]/50">A</div>
+                        <h3 className="text-white font-bold">{GHANA_MOCK_DATA.optimizedPlan.title}</h3>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[#3ecf8e] font-bold text-xl">{GHANA_MOCK_DATA.optimizedPlan.cost}</div>
+                        <div className="text-neutral-500 text-xs">saves {GHANA_MOCK_DATA.optimizedPlan.saves}</div>
+                      </div>
+                    </div>
+                    <div className="p-6 md:p-8">
+                      <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">MODIFICATIONS APPLIED</div>
+                      <ul className="space-y-4">
+                        {GHANA_MOCK_DATA.optimizedPlan.modifications.map((mod, idx) => (
+                          <li key={idx} className="flex text-sm text-neutral-300 leading-relaxed">
+                            <span className="text-[#3ecf8e] font-mono mr-4 mt-0.5">0{idx + 1}</span>
+                            {mod}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <div className="p-6 md:p-8">
-                  <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest mb-4">MODIFICATIONS APPLIED</div>
-                  <ul className="space-y-4">
-                    {GHANA_MOCK_DATA.optimizedPlan.modifications.map((mod, idx) => (
-                      <li key={idx} className="flex text-sm text-neutral-300 leading-relaxed">
-                        <span className="text-[#3ecf8e] font-mono mr-4 mt-0.5">0{idx + 1}</span>
-                        {mod}
-                      </li>
-                    ))}
-                  </ul>
+
+                <div className="lg:col-span-1">
+                  <SectionHeader number="-" title="Supply Chain Map" />
+                  <div className="border border-neutral-800 rounded-xl bg-[#111111] p-2 h-full min-h-[300px] flex flex-col">
+                    <StoreMap 
+                      locationQuery={region && city ? \`\${city}, \${region}\` : "Ghana"}
+                      pinType="depot"
+                    />
+                  </div>
                 </div>
+
               </div>
             </section>
 
