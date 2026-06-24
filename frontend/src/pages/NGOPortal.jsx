@@ -16,7 +16,7 @@ const GHANA_MOCK_DATA = {
     resources: [
       "3 trained community health workers",
       "40 community volunteers",
-      "$8,000 NGO budget (WASH-Ghana)",
+      "₱450,000 NGO budget (WASH-Ghana)",
       "Proximity to Tamale district support depot"
     ],
     constraints: [
@@ -31,7 +31,7 @@ const GHANA_MOCK_DATA = {
     {
       id: 'A',
       title: "Borehole + Hand Pump",
-      cost: "$6,200",
+      cost: "₱350,000",
       time: "4-5 weeks",
       match: 91,
       desc: "Drill 2 boreholes (35-50 m depth) with hand pumps. Year-round supply, low ongoing cost, proven technology in West Africa.",
@@ -41,7 +41,7 @@ const GHANA_MOCK_DATA = {
     {
       id: 'B',
       title: "Rainwater Harvesting Network",
-      cost: "$4,800",
+      cost: "₱270,000",
       time: "3 weeks",
       match: 72,
       desc: "8 community ferro-cement tanks (10,000 L each) with roof catchment on school and clinic buildings.",
@@ -64,7 +64,7 @@ const GHANA_MOCK_DATA = {
   resources: {
     people: "1 Project Manager, 2 Drillers, 20 Volunteers",
     skills: "Hydrogeology, Basic Construction, Community Organizing",
-    budget: "$5,400 (Allocated from WASH-Ghana)",
+    budget: "₱300,000 (Allocated from WASH-Ghana)",
     owner: "Local Water Committee (5 members)",
     sustainability: "Monthly 50 GHS collection per household for maintenance fund."
   },
@@ -94,8 +94,8 @@ const GHANA_MOCK_DATA = {
   },
   impact: {
     people: "1,200",
-    totalCost: "$5,400",
-    costPerPerson: "$4.50",
+    totalCost: "₱300,000",
+    costPerPerson: "₱250",
     timeline: "5 weeks",
     readinessScore: "85%",
     envSocial: "Eliminates 90% of plastic water waste; empowers local female committee leaders.",
@@ -121,7 +121,7 @@ export default function NGOPortal() {
   const [city, setCity] = useState('');
   const [barangay, setBarangay] = useState('');
 
-  const [situationPrompt, setSituationPrompt] = useState("A village of 1,200 people in northern Ghana lacks reliable clean water access. Current sources are 2 hand-dug wells that dry up in dry season and a river 3 km away with contamination risk. We have 3 trained community health workers, support from local NGO (WASH-Ghana) with roughly $8,000 available, and 40 able-bodied community volunteers. Rainy season starts in 6 weeks. Main constraints: no heavy machinery on-site, limited material transport from the nearest town (Tamale, 120 km).");
+  const [situationPrompt, setSituationPrompt] = useState("A village of 1,200 people in northern Ghana lacks reliable clean water access. Current sources are 2 hand-dug wells that dry up in dry season and a river 3 km away with contamination risk. We have 3 trained community health workers, support from local NGO (WASH-Ghana) with roughly ₱450,000 available, and 40 able-bodied community volunteers. Rainy season starts in 6 weeks. Main constraints: no heavy machinery on-site, limited material transport from the nearest town (Tamale, 120 km).");
   const [extractionComplete, setExtractionComplete] = useState(false);
   
   // Checklist State
@@ -618,7 +618,7 @@ export default function NGOPortal() {
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 border-b border-neutral-800">
                   <MetricCard icon={<FiUsers />} value={GHANA_MOCK_DATA.impact.people} label="BENEFICIARIES" />
-                  <MetricCard icon={<span className="font-serif">$</span>} value={GHANA_MOCK_DATA.impact.totalCost} label="EST. COST" />
+                  <MetricCard icon={<span className="font-serif">₱</span>} value={GHANA_MOCK_DATA.impact.totalCost} label="EST. COST" />
                   <MetricCard icon={<FiTrendingUp />} value={GHANA_MOCK_DATA.impact.readinessScore} label="READINESS SCORE" />
                   <MetricCard icon={<FiClock />} value={GHANA_MOCK_DATA.impact.timeline} label="TIMELINE" noBorder />
                 </div>
