@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { FiMapPin } from 'react-icons/fi';
@@ -24,6 +24,7 @@ const createCustomIcon = (color) => {
 
 const iconGreen = createCustomIcon('#3ecf8e');
 const iconBlue = createCustomIcon('#3b82f6');
+const iconTarget = createCustomIcon('#eab308'); // Yellow target
 
 const STORES = [
   { id: 1, name: 'Alexan Commercial', type: 'Electronics Supplier', lat: 14.5995, lng: 120.9842, stock: 'High' },
@@ -42,14 +43,15 @@ const STORES = [
 const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
-export default function StoreMap() {
+export default function StoreMap({ locationQuery, pinType = 'maker' }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
+  const markersRef = useRef([]);
 
   useEffect(() => {
     if (!mapRef.current) return;
     
-    // Only initialize once
+    // Initialize map once
     if (!mapInstance.current) {
       mapInstance.current = L.map(mapRef.current, {
         center: [14.6091, 121.0223],
@@ -60,10 +62,20 @@ export default function StoreMap() {
       L.tileLayer(TILE_URL, {
         attribution: ATTRIBUTION
       }).addTo(mapInstance.current);
+    }
 
+    const map = mapInstance.current;
+
+    // Clear existing markers
+    markersRef.current.forEach(marker => map.removeLayer(marker));
+    markersRef.current = [];
+
+    if (pinType === 'maker') {
+      map.setView([14.6091, 121.0223], 12);
       STORES.forEach((store) => {
         const icon = store.stock === 'High' ? iconGreen : iconBlue;
-        const marker = L.marker([store.lat, store.lng], { icon }).addTo(mapInstance.current);
+        const marker = L.marker([store.lat, store.lng], { icon }).addTo(map);
+        markersRef.current.push(marker);
         
         const badgeColor = store.stock === 'High' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700';
         
@@ -79,8 +91,37 @@ export default function StoreMap() {
           </div>
         `, { className: 'custom-popup' });
       });
+    } else if (pinType === 'ngo' && locationQuery) {
+      // Dynamic Target Location Fetching via Nominatim
+      const query = encodeURIComponent(`${locationQuery}, Philippines`);
+      fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            map.setView([lat, lon], 13);
+            
+            const marker = L.marker([lat, lon], { icon: iconTarget }).addTo(map);
+            markersRef.current.push(marker);
+            
+            marker.bindPopup(`
+              <div class="p-1 text-center">
+                <h3 class="font-bold text-gray-900 text-sm mb-1 uppercase text-yellow-600">TARGET ZONE</h3>
+                <p class="text-xs text-gray-600">${locationQuery}</p>
+              </div>
+            `, { className: 'custom-popup' }).openPopup();
+          } else {
+            console.warn("Location not found via Nominatim.");
+          }
+        })
+        .catch(err => console.error("Geocoding failed:", err));
     }
 
+  }, [locationQuery, pinType]);
+
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
       if (mapInstance.current) {
         mapInstance.current.remove();
