@@ -81,17 +81,8 @@ export default function ProjectWizard() {
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Select Tool Type</h4>
-                {category === 'engineering' ? (
-                  <>
-                    <SelectionCard title="Extract Context (URL)" subtitle="From YouTube/GitHub" icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
-                    <SelectionCard title="Build Idea (Text)" subtitle="AI text generation" icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
-                  </>
-                ) : (
-                  <>
-                    <SelectionCard title="WASH Framework" subtitle="Water & Sanitation" icon={FiGlobe} selected={toolType === 'wash'} onClick={() => { setToolType('wash'); nextStep(); }} />
-                    <SelectionCard title="Energy Blueprint" subtitle="Solar & Power" icon={FiCpu} selected={toolType === 'energy'} onClick={() => { setToolType('energy'); nextStep(); }} />
-                  </>
-                )}
+                <SelectionCard title="Extract Context (URL)" subtitle="From YouTube/GitHub/Docs" icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
+                <SelectionCard title="Build Idea (Text)" subtitle="AI text generation" icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
               </motion.div>
             )}
 
