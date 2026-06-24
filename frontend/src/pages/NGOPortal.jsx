@@ -7,26 +7,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import TerminalLoader from '../components/TerminalLoader';
 import StoreMap from '../components/map/StoreMap';
-
-const PH_REGIONS_CITIES = {
-  "NCR (National Capital Region)": ["Manila", "Quezon City", "Makati", "Taguig", "Pasig", "Caloocan", "Mandaluyong", "Muntinlupa", "Parañaque"],
-  "CAR (Cordillera Administrative Region)": ["Baguio City", "Tabuk City", "La Trinidad", "Bangued", "Bontoc"],
-  "Region I (Ilocos Region)": ["Laoag City", "Vigan City", "Dagupan City", "San Fernando City", "Urdaneta City"],
-  "Region II (Cagayan Valley)": ["Tuguegarao City", "Cauayan City", "Ilagan City", "Santiago City", "Bayombong"],
-  "Region III (Central Luzon)": ["Angeles City", "San Fernando City", "Olongapo City", "Malolos City", "Tarlac City", "Cabanatuan City"],
-  "Region IV-A (CALABARZON)": ["Antipolo City", "Batangas City", "Lucena City", "Dasmariñas City", "Santa Rosa City", "Imus City"],
-  "Region IV-B (MIMAROPA)": ["Puerto Princesa City", "Calapan City", "Boac", "San Jose", "Romblon"],
-  "Region V (Bicol Region)": ["Legazpi City", "Naga City", "Sorsogon City", "Iriga City", "Tabaco City", "Masbate City"],
-  "Region VI (Western Visayas)": ["Iloilo City", "Bacolod City", "Roxas City", "Silay City", "Cadiz City", "San Carlos City"],
-  "Region VII (Central Visayas)": ["Cebu City", "Mandaue City", "Lapu-Lapu City", "Dumaguete City", "Tagbilaran City", "Talisay City"],
-  "Region VIII (Eastern Visayas)": ["Tacloban City", "Ormoc City", "Calbayog City", "Catbalogan City", "Maasin City"],
-  "Region IX (Zamboanga Peninsula)": ["Zamboanga City", "Dipolog City", "Pagadian City", "Dapitan City", "Isabela City"],
-  "Region X (Northern Mindanao)": ["Cagayan de Oro City", "Iligan City", "Ozamiz City", "Malaybalay City", "Valencia City"],
-  "Region XI (Davao Region)": ["Davao City", "Tagum City", "Digos City", "Panabo City", "Mati City", "Samal"],
-  "Region XII (SOCCSKSARGEN)": ["General Santos City", "Cotabato City", "Koronadal City", "Kidapawan City", "Tacurong City"],
-  "Region XIII (Caraga)": ["Butuan City", "Surigao City", "Bayugan City", "Bislig City", "Tandag City", "Cabadbaran City"],
-  "BARMM": ["Marawi City", "Lamitan City", "Isabela City", "Jolo", "Bongao"]
-};
+import PH_REGIONS_CITIES from '../data/phLocations.json';
 
 // Mock Data representing the Ghana Water Crisis scenario
 const GHANA_MOCK_DATA = {
