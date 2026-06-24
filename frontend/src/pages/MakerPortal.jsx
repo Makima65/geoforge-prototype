@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus, FiEdit3 } from 'react-icons/fi';
+import { FiChevronRight, FiChevronLeft, FiHelpCircle, FiX, FiPlus, FiTrash2, FiMapPin, FiDownload, FiSave, FiList, FiMinus, FiEdit3, FiAlertTriangle } from 'react-icons/fi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { runVectorMatch } from '../services/api';
 import { supabase } from '../services/supabase';
