@@ -353,17 +353,12 @@ export default function MakerPortal() {
                           />
                           <div className="px-4 pb-3 flex justify-between items-center mt-2 border-t border-neutral-800/50 pt-3">
                             <span className="text-neutral-500 text-xs">{prompt.length} characters</span>
-                            <button type="submit" disabled={loading} className="bg-[#24b47e] hover:bg-[#3ecf8e] text-black font-bold rounded-lg px-6 py-2.5 active:scale-[0.98] transition-all flex items-center text-sm shadow-[0_0_15px_rgba(36,180,126,0.15)]">
-                              ⚡ Generate Build Plan
-                            </button>
                           </div>
                         </div>
                       </>
                     )}
                     
-                    {inputMode === 'url' && (
-                      <GenerateButton disabled={loading} />
-                    )}
+                    <GenerateButton disabled={loading} />
                   </form>
                 </div>
               </div>
