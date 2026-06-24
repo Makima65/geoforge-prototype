@@ -32,6 +32,12 @@ export const runVectorMatch = async (payload) => {
       { orig: "Arduino Uno R3", local: "ESP32-WROOM", notes: "Better for IoT", supplier: "Makerlab Electronics", price: 350 },
       { orig: "NEMA 17 Stepper", local: "Generic NEMA 17 (1.5A)", notes: "Standard torque", supplier: "Makerlab Electronics", price: 450 },
       { orig: "L298N Motor Driver", local: "A4988 Stepper Driver", notes: "More efficient", supplier: "E-Gizmo", price: 120 },
+      { orig: "12V Power Supply", local: "12V 5A Switching Power Supply", notes: "Enough current for steppers", supplier: "Makerlab Electronics", price: 350 },
+      { orig: "Standard 5V Relay", local: "5V Dual Channel Relay Module", notes: "Standard 5V logic relay", supplier: "E-Gizmo", price: 95 },
+      { orig: "16x2 LCD", local: "16x2 I2C LCD Display (5V)", notes: "Requires 5V I2C logic lines", supplier: "CircuitRocks", price: 180 },
+      { orig: "DHT22 Sensor", local: "DHT22 Temperature & Humidity Sensor", notes: "Wide temp range", supplier: "Makerlab Electronics", price: 250 },
+      { orig: "Jumper Wires", local: "Premium Jumper Wires (40pcs)", notes: "Assorted M-M, M-F, F-F", supplier: "E-Gizmo", price: 85 },
+      { orig: "Push Buttons", local: "Tactile Push Buttons (10pcs)", notes: "Standard 6x6x5mm", supplier: "Makerlab Electronics", price: 30 },
     ];
   }
 
