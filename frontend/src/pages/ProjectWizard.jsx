@@ -10,23 +10,21 @@ export default function ProjectWizard() {
   // State
   const [category, setCategory] = useState(null);
   const [toolType, setToolType] = useState(null);
-  const [stakeholders, setStakeholders] = useState(null);
   const [projectName, setProjectName] = useState('');
 
-  const nextStep = () => setStep(prev => Math.min(prev + 1, 4));
+  const nextStep = () => setStep(prev => Math.min(prev + 1, 3));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
-  const handleFinish = () => {
-    if (category === 'maker') {
-      navigate('/new');
+    if (category === 'engineering') {
+      navigate('/new', { state: { toolType, projectName } });
     } else {
-      navigate('/ngo');
+      navigate('/ngo', { state: { toolType, projectName } });
     }
   };
 
   const getOrbColor = () => {
-    if (category === 'maker') return 'from-cyan-500 via-blue-500 to-purple-600';
-    if (category === 'ngo') return 'from-green-500 via-emerald-500 to-teal-600';
+    if (category === 'engineering') return 'from-cyan-500 via-blue-500 to-purple-600';
+    if (category === 'impact') return 'from-green-500 via-emerald-500 to-teal-600';
     return 'from-indigo-500 via-purple-500 to-pink-500'; // Default
   };
 
@@ -51,7 +49,6 @@ export default function ProjectWizard() {
 
       {/* Header */}
       <div className="mb-16 relative z-10">
-        <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-4">Inquire</h4>
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white max-w-2xl leading-[1.1]">
           Ready to bring your next idea to life?
         </h1>
@@ -69,12 +66,12 @@ export default function ProjectWizard() {
                 <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Project Categories</h4>
                 
                 <SelectionCard 
-                  title="Maker / Tech" subtitle="Hardware & Software" icon={FiCpu} 
-                  selected={category === 'maker'} onClick={() => { setCategory('maker'); nextStep(); }} 
+                  title="Engineering Mode" subtitle="Hardware & Software" icon={FiCpu} 
+                  selected={category === 'engineering'} onClick={() => { setCategory('engineering'); nextStep(); }} 
                 />
                 <SelectionCard 
-                  title="Social Impact" subtitle="NGO & Community" icon={FiGlobe} 
-                  selected={category === 'ngo'} onClick={() => { setCategory('ngo'); nextStep(); }} 
+                  title="Impact Planning Engine" subtitle="NGO & Community" icon={FiGlobe} 
+                  selected={category === 'impact'} onClick={() => { setCategory('impact'); nextStep(); }} 
                 />
               </motion.div>
             )}
@@ -83,10 +80,10 @@ export default function ProjectWizard() {
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Select Tool Type</h4>
-                {category === 'maker' ? (
+                {category === 'engineering' ? (
                   <>
-                    <SelectionCard title="URL Extractor" subtitle="From YouTube/GitHub" icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
-                    <SelectionCard title="Describe Idea" subtitle="AI text generation" icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
+                    <SelectionCard title="Extract Context (URL)" subtitle="From YouTube/GitHub" icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
+                    <SelectionCard title="Build Idea (Text)" subtitle="AI text generation" icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
                   </>
                 ) : (
                   <>
@@ -100,19 +97,6 @@ export default function ProjectWizard() {
             {/* STEP 3 */}
             {step === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-                <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">How Many Stakeholders?</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <SquareCard title="1 User" icon={FiUser} selected={stakeholders === '1'} onClick={() => { setStakeholders('1'); nextStep(); }} />
-                  <SquareCard title="2 Users" icon={FiUsers} selected={stakeholders === '2'} onClick={() => { setStakeholders('2'); nextStep(); }} />
-                  <SquareCard title="3 Users" icon={FiUsers} selected={stakeholders === '3'} onClick={() => { setStakeholders('3'); nextStep(); }} />
-                  <SquareCard title="Community" icon={FiGlobe} selected={stakeholders === 'all'} onClick={() => { setStakeholders('all'); nextStep(); }} />
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 4 */}
-            {step === 4 && (
-              <motion.div key="step4" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h4 className="text-[11px] font-bold text-neutral-500 tracking-[0.2em] uppercase mb-6">Give it a name</h4>
                 <div className="bg-[#1A1A1A] border border-neutral-800 rounded-2xl p-2 mb-6">
                   <input 
@@ -127,7 +111,7 @@ export default function ProjectWizard() {
                 <button 
                   onClick={handleFinish}
                   disabled={!projectName.trim()}
-                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center transition-all ${projectName.trim() ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-[#1A1A1A] text-neutral-500 cursor-not-allowed'}`}
+                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center transition-all ${projectName.trim() ? 'bg-[#3ecf8e] hover:bg-[#2fb575] text-black shadow-[0_0_20px_rgba(62,207,142,0.3)]' : 'bg-[#1A1A1A] text-neutral-500 cursor-not-allowed'}`}
                 >
                   Review Summary <FiArrowRight className="ml-2" />
                 </button>
@@ -153,7 +137,7 @@ export default function ProjectWizard() {
 
           <motion.div 
             variants={orbVariants}
-            animate={step === 4 ? "pulse" : "idle"}
+            animate={step === 3 ? "pulse" : "idle"}
             className="relative w-64 h-64 flex items-center justify-center"
           >
             {/* The actual glow */}
@@ -161,9 +145,8 @@ export default function ProjectWizard() {
             <div className={`absolute inset-2 bg-gradient-to-bl ${getOrbColor()} rounded-[60%] blur-2xl opacity-50 animate-spin-slow`} style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
             <div className={`absolute inset-4 bg-gradient-to-t ${getOrbColor()} rounded-full blur-md opacity-90`} />
             
-            {/* Center icon */}
             <div className="relative z-10 text-white drop-shadow-2xl">
-              {category === 'maker' ? <FiCpu className="w-20 h-20" /> : <FiGlobe className="w-20 h-20" />}
+              {category === 'engineering' ? <FiCpu className="w-20 h-20" /> : <FiGlobe className="w-20 h-20" />}
             </div>
           </motion.div>
         </div>
@@ -197,19 +180,10 @@ export default function ProjectWizard() {
               )}
               {step === 3 && (
                 <>
-                  <div className="text-[11px] font-bold text-blue-500 tracking-[0.2em] uppercase mb-2">{category} • {toolType}</div>
-                  <h2 className="text-3xl font-bold text-white mb-4">Almost There.</h2>
-                  <p className="text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
-                    How many stakeholders or primary users will be interacting with this application initially?
-                  </p>
-                </>
-              )}
-              {step === 4 && (
-                <>
-                  <div className="text-[11px] font-bold text-blue-500 tracking-[0.2em] uppercase mb-2 bg-blue-500/10 px-3 py-1 inline-block rounded-full ml-auto">FINAL STEP</div>
+                  <div className="text-[11px] font-bold text-[#3ecf8e] tracking-[0.2em] uppercase mb-2 bg-[#3ecf8e]/10 px-3 py-1 inline-block rounded-full ml-auto">FINAL STEP</div>
                   <h2 className="text-3xl font-bold text-white mb-4 mt-2">The Final Touch.</h2>
                   <p className="text-neutral-400 text-sm leading-relaxed max-w-[280px] ml-auto">
-                    What name should we give to this amazing {category} project? This helps us keep things organized.
+                    What name should we give to this {category === 'engineering' ? 'engineering' : 'impact'} project? This helps us keep things organized.
                   </p>
                 </>
               )}

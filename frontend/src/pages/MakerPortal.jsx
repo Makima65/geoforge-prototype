@@ -49,6 +49,8 @@ export default function MakerPortal() {
       
       // Clear state so refresh doesn't trigger it again
       window.history.replaceState({}, document.title);
+    } else if (location.state && location.state.toolType) {
+      setInputMode(location.state.toolType);
     }
   }, [location]);
 
@@ -393,29 +395,18 @@ export default function MakerPortal() {
         {step === 0 && (
           <motion.div key="step0" variants={slideVariants} initial="initial" animate="enter" exit="exit" className="w-full">
             <div className="mb-10">
-              <h2 className="text-[32px] leading-tight font-extrabold tracking-tight text-white mb-2">Ready to build something?</h2>
-              <p className="text-[#3ecf8e] font-medium tracking-wide">Paste a tutorial link to generate a localized ₱ PHP parts list & budget tracker.</p>
+              <h2 className="text-[32px] leading-tight font-extrabold tracking-tight text-white mb-2">
+                {location.state?.projectName ? location.state.projectName : "Ready to build something?"}
+              </h2>
+              <p className="text-[#3ecf8e] font-medium tracking-wide">
+                {inputMode === 'url' ? 'Paste a tutorial link to generate a localized ₱ PHP parts list & budget tracker.' : 'Describe your engineering idea to generate a complete architecture and parts list.'}
+              </p>
             </div>
 
             {isExtracting ? (
               <TerminalLoader isComplete={extractionComplete} onFinished={handleExtractionDone} />
             ) : (
               <div className="bg-[#151515] border border-neutral-800 rounded-2xl overflow-hidden mb-14 shadow-lg">
-                <div className="flex border-b border-neutral-800">
-                  <button 
-                    onClick={() => setInputMode('url')}
-                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors ${inputMode === 'url' ? 'text-[#3ecf8e] border-b-2 border-[#3ecf8e] bg-[#3ecf8e]/5' : 'text-neutral-500 hover:text-white'}`}
-                  >
-                    Extract Context (URL)
-                  </button>
-                  <button 
-                    onClick={() => setInputMode('text')}
-                    className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors ${inputMode === 'text' ? 'text-[#3ecf8e] border-b-2 border-[#3ecf8e] bg-[#3ecf8e]/5' : 'text-neutral-500 hover:text-white'}`}
-                  >
-                    Build Idea (Text)
-                  </button>
-                </div>
-                
                 <div className="p-8">
                   <form onSubmit={handleSubmit}>
                     {inputMode === 'url' ? (
