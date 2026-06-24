@@ -125,7 +125,7 @@ export default function NGOPortal() {
   const [extractionComplete, setExtractionComplete] = useState(false);
   
   // Checklist State
-  const [checkedTasks, setCheckedTasks] = useState(new Set());
+  const [checkedTasks, setCheckedTasks] = useState(new Set(editProject?.components || []));
   const [showExportMenu, setShowExportMenu] = useState(false);
 
   const handleAnalyze = () => {
@@ -160,14 +160,16 @@ export default function NGOPortal() {
   const completedTasks = checkedTasks.size;
 
   const handleSavePlan = async () => {
+    const isCompleted = checkedTasks.size === totalTasks;
     const planToSave = {
       title: projectName,
       mode: 'ngo',
       final_cost: 5400, // from mock data
       is_optimized: true,
-      components: [], // No physical hardware parts like Maker
+      is_completed: isCompleted,
+      components: Array.from(checkedTasks), // Save the checklist items
       audit_log: [
-        { action: "Impact Plan generated via CommunityPlanner", timestamp: new Date().toLocaleString() }
+        { action: "Impact Plan updated via CommunityPlanner", timestamp: new Date().toLocaleString() }
       ]
     };
 
