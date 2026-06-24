@@ -522,7 +522,7 @@ export default function NGOPortal() {
                   <SectionHeader number="-" title="Supply Chain Map" />
                   <div className="border border-neutral-800 rounded-xl bg-[#111111] p-2 h-full min-h-[300px] flex flex-col">
                     <StoreMap 
-                      locationQuery={region && city ? \`\${city}, \${region}\` : "Ghana"}
+                      locationQuery={region && city ? `${city}, ${region}` : "Ghana"}
                       pinType="depot"
                     />
                   </div>
