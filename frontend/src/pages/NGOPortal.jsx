@@ -8,6 +8,26 @@ import html2canvas from 'html2canvas';
 import TerminalLoader from '../components/TerminalLoader';
 import StoreMap from '../components/map/StoreMap';
 
+const PH_REGIONS_CITIES = {
+  "NCR (National Capital Region)": ["Manila", "Quezon City", "Makati", "Taguig", "Pasig", "Caloocan", "Mandaluyong", "Muntinlupa", "Parañaque"],
+  "CAR (Cordillera Administrative Region)": ["Baguio City", "Tabuk City", "La Trinidad", "Bangued", "Bontoc"],
+  "Region I (Ilocos Region)": ["Laoag City", "Vigan City", "Dagupan City", "San Fernando City", "Urdaneta City"],
+  "Region II (Cagayan Valley)": ["Tuguegarao City", "Cauayan City", "Ilagan City", "Santiago City", "Bayombong"],
+  "Region III (Central Luzon)": ["Angeles City", "San Fernando City", "Olongapo City", "Malolos City", "Tarlac City", "Cabanatuan City"],
+  "Region IV-A (CALABARZON)": ["Antipolo City", "Batangas City", "Lucena City", "Dasmariñas City", "Santa Rosa City", "Imus City"],
+  "Region IV-B (MIMAROPA)": ["Puerto Princesa City", "Calapan City", "Boac", "San Jose", "Romblon"],
+  "Region V (Bicol Region)": ["Legazpi City", "Naga City", "Sorsogon City", "Iriga City", "Tabaco City", "Masbate City"],
+  "Region VI (Western Visayas)": ["Iloilo City", "Bacolod City", "Roxas City", "Silay City", "Cadiz City", "San Carlos City"],
+  "Region VII (Central Visayas)": ["Cebu City", "Mandaue City", "Lapu-Lapu City", "Dumaguete City", "Tagbilaran City", "Talisay City"],
+  "Region VIII (Eastern Visayas)": ["Tacloban City", "Ormoc City", "Calbayog City", "Catbalogan City", "Maasin City"],
+  "Region IX (Zamboanga Peninsula)": ["Zamboanga City", "Dipolog City", "Pagadian City", "Dapitan City", "Isabela City"],
+  "Region X (Northern Mindanao)": ["Cagayan de Oro City", "Iligan City", "Ozamiz City", "Malaybalay City", "Valencia City"],
+  "Region XI (Davao Region)": ["Davao City", "Tagum City", "Digos City", "Panabo City", "Mati City", "Samal"],
+  "Region XII (SOCCSKSARGEN)": ["General Santos City", "Cotabato City", "Koronadal City", "Kidapawan City", "Tacurong City"],
+  "Region XIII (Caraga)": ["Butuan City", "Surigao City", "Bayugan City", "Bislig City", "Tandag City", "Cabadbaran City"],
+  "BARMM": ["Marawi City", "Lamitan City", "Isabela City", "Jolo", "Bongao"]
+};
+
 // Mock Data representing the Ghana Water Crisis scenario
 const GHANA_MOCK_DATA = {
   context: {
@@ -314,26 +334,32 @@ export default function NGOPortal() {
                 <div>
                   <label className="block text-white font-bold mb-2 text-sm">Region *</label>
                   <select 
-                    value={region} onChange={(e) => setRegion(e.target.value)}
+                    value={region} 
+                    onChange={(e) => {
+                      setRegion(e.target.value);
+                      setCity(''); // Reset city when region changes
+                    }}
                     className="w-full bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#3ecf8e] transition-colors"
                   >
                     <option value="">Select a region...</option>
-                    <option value="NCR">National Capital Region (NCR)</option>
-                    <option value="CAR">Cordillera Administrative Region (CAR)</option>
-                    <option value="Region I">Region I (Ilocos Region)</option>
-                    <option value="Region III">Region III (Central Luzon)</option>
-                    <option value="Region IV-A">Region IV-A (CALABARZON)</option>
-                    <option value="Region VII">Region VII (Central Visayas)</option>
-                    <option value="Region XI">Region XI (Davao Region)</option>
+                    {Object.keys(PH_REGIONS_CITIES).map((r) => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
                   <label className="block text-white font-bold mb-2 text-sm">City / Municipality *</label>
-                  <input 
-                    type="text" placeholder="e.g. Davao City" 
-                    value={city} onChange={(e) => setCity(e.target.value)}
-                    className="w-full bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-white placeholder-neutral-600 focus:outline-none focus:border-[#3ecf8e] transition-colors"
-                  />
+                  <select 
+                    value={city} 
+                    onChange={(e) => setCity(e.target.value)}
+                    disabled={!region}
+                    className={`w-full bg-[#1A1A1A] border border-neutral-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#3ecf8e] transition-colors ${!region ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <option value="">Select a city...</option>
+                    {region && PH_REGIONS_CITIES[region].map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-white font-bold mb-2 text-sm">Barangay <span className="text-neutral-500 font-normal">(optional)</span></label>
