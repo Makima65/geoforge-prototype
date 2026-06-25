@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiTrash2, FiEye, FiShoppingCart, FiClock, FiAlertTriangle, FiGlobe, FiRefreshCcw, FiTrash } from 'react-icons/fi';
+import { FiTrash2, FiEye, FiShoppingCart, FiCpu, FiClock, FiAlertTriangle, FiGlobe, FiRefreshCcw, FiTrash } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import Skeleton from '../components/Skeleton';
@@ -75,7 +75,7 @@ export default function SavedProjects() {
           onClick={() => setActiveTab('engineering')}
           className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-bold text-sm transition-all ${activeTab === 'engineering' ? 'bg-soft text-blue-400 shadow-sm' : 'text-muted hover:text-primary hover:bg-panel-strong'}`}
         >
-          <FiShoppingCart className="mr-2" /> Engineering Projects
+          <FiCpu className="mr-2" /> Engineering Projects
         </button>
         <button
           onClick={() => setActiveTab('community')}
@@ -121,7 +121,7 @@ export default function SavedProjects() {
       ) : filteredCarts.length === 0 ? (
         <div className="bg-surface-soft border border-default rounded-2xl p-16 flex flex-col items-center text-center">
           <div className="w-20 h-20 bg-soft rounded-full flex items-center justify-center mb-6">
-            {activeTab === 'engineering' ? <FiShoppingCart className="text-blue-500 w-8 h-8" /> : activeTab === 'community' ? <FiGlobe className="text-accent w-8 h-8" /> : <FiTrash className="text-red-400 w-8 h-8" />}
+            {activeTab === 'engineering' ? <FiCpu className="text-blue-500 w-8 h-8" /> : activeTab === 'community' ? <FiGlobe className="text-accent w-8 h-8" /> : <FiTrash className="text-red-400 w-8 h-8" />}
           </div>
           <h3 className="text-primary font-bold text-xl mb-2">
             {activeTab === 'trash' ? 'Archive is Empty' : `No Saved ${activeTab === 'engineering' ? 'Projects' : 'Initiatives'} Yet`}
@@ -155,7 +155,7 @@ export default function SavedProjects() {
                 <div className="p-6 border-b border-default">
                   <div className="flex justify-between items-start mb-4">
                     <div className={`w-12 h-12 rounded-lg bg-soft border flex items-center justify-center shrink-0 ${activeTab === 'trash' ? 'border-red-500/30' : isNgo ? 'border-accent-soft' : 'border-blue-500/30'}`}>
-                      {isNgo ? <FiGlobe className={activeTab === 'trash' ? 'text-red-400 w-5 h-5' : 'text-accent w-5 h-5'} /> : <FiShoppingCart className={activeTab === 'trash' ? 'text-red-400 w-5 h-5' : 'text-blue-400 w-5 h-5'} />}
+                      {isNgo ? <FiGlobe className={activeTab === 'trash' ? 'text-red-400 w-5 h-5' : 'text-accent w-5 h-5'} /> : <FiCpu className={activeTab === 'trash' ? 'text-red-400 w-5 h-5' : 'text-blue-400 w-5 h-5'} />}
                     </div>
                     <div className="flex flex-col items-end space-y-1">
                       {activeTab === 'trash' ? (
