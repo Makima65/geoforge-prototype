@@ -112,8 +112,8 @@ export default function MakerPortal() {
       };
       const result = await runVectorMatch(payload);
       
-      // Simulate a 5-second extraction process for the demo
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      // Simulate an 8-second extraction process for the demo
+      await new Promise(resolve => setTimeout(resolve, 8000));
       
       const componentsWithOptions = result.components.map(c => {
         const basePrice = c.price || 500;
@@ -389,9 +389,11 @@ export default function MakerPortal() {
 
   let bomoMessage = "Hi there! I am BOMO. I analyze hardware setups and connect you directly to local Agora nodes for real-time stocks and pricing!";
   if (step === 0 && isExtracting) {
-    bomoMessage = "Processing your input... I'm listening to the audio transcript, matching hardware components, and pinging local Agora nodes for stock! This usually takes about 5 seconds.";
+    bomoMessage = "Processing your input... I am running advanced Natural Language Processing on the video's audio transcript to accurately extract all technical specifications, and cross-referencing them with live Agora nodes for stock availability. Please hold on a moment!";
   } else if (step === 1) {
     bomoMessage = "Extraction complete! I found all your parts from local suppliers. However, I detected a logic mismatch in your components. Please check the compatibility warning below for more info.";
+  } else if (step === 2) {
+    bomoMessage = "I found these active components in supplier warehouse stocks. You can pick the specific brand, price, and condition you want to use for your build!";
   } else if (step === 3) {
     bomoMessage = "Great news! I swapped out unavailable boards for equivalents, bundled items, and lowered your final price! Select my optimized recommendations to see the savings.";
   } else if (step === 4) {
