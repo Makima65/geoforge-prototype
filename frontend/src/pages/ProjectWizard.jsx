@@ -81,6 +81,9 @@ export default function ProjectWizard() {
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h4 className="text-[11px] font-bold text-muted tracking-[0.2em] uppercase mb-6">Select how you want to start</h4>
+                {category === 'engineering' && (
+                  <SelectionCard title="IMPORT REFERENCES" subtitle="Import information from YouTube, GitHub, documents, or external sources to create a project foundation." icon={FiLink} selected={toolType === 'url'} onClick={() => { setToolType('url'); nextStep(); }} />
+                )}
                 <SelectionCard title="START FROM AN IDEA" subtitle="Describe your concept in text and let BOMO create an initial project structure." icon={FiEdit3} selected={toolType === 'text'} onClick={() => { setToolType('text'); nextStep(); }} />
               </motion.div>
             )}
