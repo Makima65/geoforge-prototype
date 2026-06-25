@@ -12,8 +12,11 @@ const MarkCompleteCard = ({ isCompleted, onToggle }) => {
     if (status === 'idle') {
       setStatus('confirming');
     } else if (status === 'confirming') {
-      onToggle(true);
-      setStatus('completed');
+      setStatus('animating');
+      setTimeout(() => {
+        onToggle(true);
+        setStatus('completed');
+      }, 1200);
     } else if (status === 'completed') {
       onToggle(false);
       setStatus('idle');
