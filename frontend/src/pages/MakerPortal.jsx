@@ -112,6 +112,9 @@ export default function MakerPortal() {
       };
       const result = await runVectorMatch(payload);
       
+      // Simulate a 5-second extraction process for the demo
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
       const componentsWithOptions = result.components.map(c => {
         const basePrice = c.price || 500;
         return {
@@ -384,10 +387,21 @@ export default function MakerPortal() {
     }
   };
 
+  let bomoMessage = "Hi there! I am BOMO. I analyze hardware setups and connect you directly to local Agora nodes for real-time stocks and pricing!";
+  if (step === 0 && isExtracting) {
+    bomoMessage = "Processing your input... I'm listening to the audio transcript, matching hardware components, and pinging local Agora nodes for stock! This usually takes about 5 seconds.";
+  } else if (step === 1) {
+    bomoMessage = "Extraction complete! I found all your parts from local suppliers. However, I detected a logic mismatch in your components. Please check the compatibility warning below for more info.";
+  } else if (step === 3) {
+    bomoMessage = "Great news! I swapped out unavailable boards for equivalents, bundled items, and lowered your final price! Select my optimized recommendations to see the savings.";
+  } else if (step === 4) {
+    bomoMessage = "Your Bill of Materials is ready! You can now download the PDF, export to Sheets, or mark the build as completed.";
+  }
+
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col p-6 md:p-10">
       <BomoAssistant 
-        message="Hi there! I am BOMO. I analyze hardware setups and connect you directly to local Agora nodes for real-time stocks and pricing!" 
+        message={bomoMessage} 
       />
       <AnimatePresence mode="wait">
         
@@ -652,7 +666,7 @@ export default function MakerPortal() {
             <div className="flex items-start justify-between mb-8">
               <div>
                 <p className="text-accent text-sm font-bold mb-1 flex items-center">
-                  <FiMapPin className="mr-2" /> Secgy the Sourcing Bot
+                  <FiMapPin className="mr-2" /> BOMO the AI Assistant
                 </p>
                 <h1 className="text-[32px] font-extrabold text-primary tracking-tight">Smart Replacements & Bundle Savings</h1>
                 <p className="text-muted text-sm mt-1">Great news! I swapped out unavailable boards for equivalents, bundled items, and lowered your final price!</p>
@@ -686,7 +700,7 @@ export default function MakerPortal() {
                 className={`bg-panel-strong border rounded-2xl p-8 cursor-pointer transition-all relative overflow-hidden ${useSmartRecommendations ? 'border-[#3ecf8e] shadow-[0_0_30px_rgba(36,180,126,0.15)]' : 'border-[#24b47e]/40 opacity-70 hover:opacity-100'}`}
               >
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-accent font-bold text-lg">Secgy's Recommendations</h3>
+                  <h3 className="text-accent font-bold text-lg">BOMO's Recommendations</h3>
                   {useSmartRecommendations && <div className="bg-accent text-black text-xs font-bold px-2 py-1 rounded">SELECTED</div>}
                 </div>
                 <div className="text-4xl font-black text-accent mb-6">₱{(calculateTotalCost(currentProject) * 0.75).toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
