@@ -4,6 +4,7 @@ import { FiPlus, FiCpu, FiGlobe } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import Skeleton from '../components/Skeleton';
+import BomoAssistant from '../components/BomoAssistant';
 
 export default function DashboardMetrics() {
   const navigate = useNavigate();
@@ -32,6 +33,9 @@ export default function DashboardMetrics() {
 
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col p-6 md:p-10 relative">
+      <BomoAssistant 
+        message="Welcome back! Your dashboard is up to date. The Agora nodes are detecting stable prices for your saved projects today." 
+      />
       <div className="mb-10 flex flex-col gap-4">
         <div>
           <h2 className="text-[32px] leading-tight font-extrabold tracking-tight text-primary mb-2">Project Overview</h2>

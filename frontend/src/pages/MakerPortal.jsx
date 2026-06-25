@@ -12,6 +12,7 @@ import TerminalLoader from '../components/TerminalLoader';
 import GenerateButton from '../components/GenerateButton';
 import MarkCompleteCard from '../components/MarkCompleteCard';
 import CompatibilityAlert from '../components/CompatibilityAlert';
+import BomoAssistant from '../components/BomoAssistant';
 
 export default function MakerPortal() {
   const [url, setUrl] = useState('');
@@ -385,6 +386,9 @@ export default function MakerPortal() {
 
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col p-6 md:p-10">
+      <BomoAssistant 
+        message="Hi there! I am BOMO. I analyze hardware setups and connect you directly to local Agora nodes for real-time stocks and pricing!" 
+      />
       <AnimatePresence mode="wait">
         
         {/* STEP 0: Dashboard */}

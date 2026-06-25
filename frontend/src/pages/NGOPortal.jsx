@@ -7,6 +7,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import TerminalLoader from '../components/TerminalLoader';
 import StoreMap from '../components/map/StoreMap';
+import BomoAssistant from '../components/BomoAssistant';
 import PH_REGIONS_CITIES from '../data/phLocations.json';
 
 // Enhanced Mock Data for the 7-section layout
@@ -274,6 +275,7 @@ export default function NGOPortal() {
 
   return (
     <div className="min-h-screen bg-page text-primary p-6 md:p-12 font-sans overflow-x-hidden">
+      <BomoAssistant message="Hi! I am BOMO. Let's design community initiatives and match you with real-time Agora suppliers for optimal deployment!" />
       
       {/* Header Context */}
       <div className="max-w-5xl mx-auto mb-12">
