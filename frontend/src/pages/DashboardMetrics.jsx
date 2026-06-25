@@ -18,8 +18,12 @@ export default function DashboardMetrics() {
         let eng = 0;
         let com = 0;
         data.forEach(cart => {
-          if (cart.category === 'engineering' || !cart.category) eng += 1;
-          else if (cart.category === 'impact' || cart.category === 'community') com += 1;
+          const isNgoProject = cart.category === 'impact' || cart.category === 'community' || cart.mode === 'ngo';
+          if (isNgoProject) {
+            com += 1;
+          } else {
+            eng += 1;
+          }
         });
         setStats({
           engineering: eng,

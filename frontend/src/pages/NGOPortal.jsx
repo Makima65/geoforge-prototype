@@ -162,6 +162,7 @@ export default function NGOPortal() {
     const isCompleted = checkedTasks.size === totalTasks;
     const planToSave = {
       title: projectName,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       mode: 'ngo',
       final_cost: 5400, // from mock data
       is_optimized: true,

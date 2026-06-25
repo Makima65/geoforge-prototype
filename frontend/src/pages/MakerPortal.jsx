@@ -130,7 +130,7 @@ export default function MakerPortal() {
       });
 
       const newProject = {
-        title: result.project_title,
+        title: location.state?.projectName || result.project_title,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         parts: result.components.length,
         localScore: result.match_quality === 'High' ? 100 : 70,
