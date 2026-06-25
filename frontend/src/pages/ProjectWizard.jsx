@@ -51,7 +51,7 @@ export default function ProjectWizard() {
       {/* Header */}
       <div className="mb-16 relative z-10">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-primary max-w-2xl leading-[1.1]">
-          Ready to bring your next idea to life?
+          What are we building today?
         </h1>
       </div>
 
